@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.dp
 internal fun BaseButton(
     onClick: () -> Unit,
     modifier: Modifier,
-    text: String,
     content: @Composable () -> Unit
 ) {
     val baseModifier = Modifier

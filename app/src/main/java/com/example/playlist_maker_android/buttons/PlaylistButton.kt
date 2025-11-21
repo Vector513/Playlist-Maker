@@ -1,8 +1,10 @@
 package com.example.playlist_maker_android.buttons
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -13,10 +15,17 @@ import com.example.playlist_maker_android.R
 
 @Composable
 internal fun PlaylistButton() {
+    val context = LocalContext.current
+
     BaseButton(
-        {},
+        {
+            Toast.makeText(
+                context,
+                "Нажата кнопка Плейлисты",
+                Toast.LENGTH_SHORT
+            ).show()
+        },
         Modifier.padding(horizontal = 16.dp),
-        "Toast",
         { PlaylistButtonContent() }
     )
 }

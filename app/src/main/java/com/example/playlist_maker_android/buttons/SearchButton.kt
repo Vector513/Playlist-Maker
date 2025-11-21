@@ -1,8 +1,10 @@
 package com.example.playlist_maker_android.buttons
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -13,10 +15,17 @@ import com.example.playlist_maker_android.R
 
 @Composable
 internal fun SearchButton() {
+    val context = LocalContext.current
+
     BaseButton(
-        {},
+    {
+            Toast.makeText(
+                context,
+                "Нажата кнопка Поиск",
+                Toast.LENGTH_SHORT
+            ).show()
+        },
         Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 0.dp),
-        "Toast",
         { SearchButtonContent() }
     )
 }
