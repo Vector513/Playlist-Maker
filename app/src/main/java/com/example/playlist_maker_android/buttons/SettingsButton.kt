@@ -1,5 +1,6 @@
 package com.example.playlist_maker_android.buttons
 
+import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -12,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.example.playlist_maker_android.BaseButton
 import com.example.playlist_maker_android.CommonButtonContent
 import com.example.playlist_maker_android.R
+import com.example.playlist_maker_android.SettingsActivity
 
 @Composable
 internal fun SettingsButtonContent() {
@@ -27,11 +29,8 @@ internal fun SettingsButton() {
 
     BaseButton(
         {
-            Toast.makeText(
-                context,
-                "Нажата кнопка Настройки",
-                Toast.LENGTH_SHORT
-            ).show()
+            val intent = Intent(context, SettingsActivity::class.java)
+            context.startActivity(intent)
         },
         Modifier.padding(horizontal = 16.dp, vertical = 0.dp),
         { SettingsButtonContent() }
