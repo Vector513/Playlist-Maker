@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">playlist-maker-android</string>
+    <string name="test_string">Dont work</string>
+    <string name="search_button_text">Поиск</string>
+    <string name="library_button_text">Плейлисты</string>
+    <string name="favourites_button_text">Избранное</string>
+    <string name="settings_button_text">Настройки</string>
 </resources>
