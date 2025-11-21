@@ -4,7 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,9 +32,34 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             PlaylistmakerandroidTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) {
-                    Menu()
+                Scaffold(modifier = Modifier
+                    .fillMaxSize()) { innerPadding ->
+                    Column(modifier = Modifier
+                        .background(Color(55, 114, 231))
+                        .padding(innerPadding)
+                    ) {
+                        PanelHeader()
+                        Menu()
+                    }
                 }
+            }
+        }
+    }
+}
+
+@Preview(device = "spec:width=411dp,height=891dp", showSystemUi = true, showBackground = true)
+@Composable
+private fun Main() {
+    PlaylistmakerandroidTheme {
+        Scaffold(
+            modifier = Modifier.fillMaxSize()
+        ) { innerPadding ->
+            Column(modifier = Modifier
+                .padding(innerPadding)
+                .background(Color(55, 114, 231))
+            ) {
+                PanelHeader()
+                Menu()
             }
         }
     }
@@ -48,9 +75,10 @@ private fun Menu() {
             bottomStart = 0.dp,
             bottomEnd = 0.dp
         ),
-//        color = Color.Gray,
+        color = Color.White,
         modifier = Modifier
-            
+            .background(Color.Transparent)
+            .fillMaxHeight()
             .padding(start = 0.dp, top = 14.dp, end = 0.dp, bottom = 0.dp)
     ) {
         Column() {
