@@ -8,33 +8,30 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.example.playlist_maker_android.ui.theme.AppColors
+import com.example.playlist_maker_android.ui.theme.AppTypography
+import com.example.playlist_maker_android.ui.theme.Dimensions
+import com.example.playlist_maker_android.ui.theme.PlaylistmakerandroidTheme
 
 @Composable
 internal fun PanelHeader() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(56.dp)
-            .background(Color(55, 114, 231))
+            .height(Dimensions.PanelHeaderHeight)
+            .background(AppColors.PrimaryBlue)
     ) {
         Text(
-            stringResource(R.string.panel_header_text),
-            color = Color.White,
-            fontFamily = YSDisplay,
-            fontWeight = FontWeight.Medium,
-            fontStyle = FontStyle.Normal,
-            fontSize = 22.sp,
-            lineHeight = 22.sp,
-            letterSpacing = 0.sp,
+            text = stringResource(R.string.panel_header_text),
+            color = AppColors.White,
+            style = AppTypography.PanelHeaderText,
             modifier = Modifier
-                .padding(start = 16.dp, top = 14.dp)
+                .padding(
+                    start = Dimensions.PanelHeaderPadding,
+                    top = Dimensions.PanelHeaderTopPadding
+                )
         )
     }
 }
@@ -42,5 +39,7 @@ internal fun PanelHeader() {
 @Preview(device = "spec:width=411dp,height=891dp", showSystemUi = true, showBackground = true)
 @Composable
 internal fun PanelHeaderPreview() {
-    PanelHeader()
+    PlaylistmakerandroidTheme {
+        PanelHeader()
+    }
 }

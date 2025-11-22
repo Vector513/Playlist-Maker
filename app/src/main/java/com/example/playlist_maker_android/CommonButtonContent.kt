@@ -15,14 +15,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.example.playlist_maker_android.ui.theme.AppColors
+import com.example.playlist_maker_android.ui.theme.AppTypography
+import com.example.playlist_maker_android.ui.theme.Dimensions
 
 @Composable
 internal fun CommonButtonContent(
@@ -30,50 +28,43 @@ internal fun CommonButtonContent(
     buttonText: String
 ) {
     Box(
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth()
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.Transparent)
+                .background(AppColors.Transparent)
         ) {
             Box(
                 modifier = Modifier
-                    .padding(start = 12.dp)
-                    .width(183.5.dp)
+                    .padding(start = Dimensions.ButtonContentStartPadding)
+                    .width(Dimensions.ButtonContentWidth)
                     .fillMaxHeight()
-                    .background(Color.Transparent),
+                    .background(AppColors.Transparent),
                 contentAlignment = Alignment.CenterStart
             ) {
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Box(
                         modifier = Modifier
-                            .width(24.dp)
-                            .height(24.dp),
+                            .width(Dimensions.IconSize)
+                            .height(Dimensions.IconSize),
                         contentAlignment = Alignment.Center
                     ) {
                         Image(
                             painter = iconResource,
                             contentDescription = null,
-                            modifier = Modifier.size(19.dp)
+                            modifier = Modifier.size(Dimensions.IconSizeSmall)
                         )
                     }
                     Text(
                         text = buttonText,
-                        modifier = Modifier,
-                        style = TextStyle(
-                            fontFamily = YSDisplay,
-                            fontWeight = FontWeight.Medium,
-                            fontSize = 22.sp,
-                            lineHeight = 22.sp,
-                            letterSpacing = 0.sp,
+                        style = AppTypography.ButtonText.copy(
                             textAlign = TextAlign.Center,
-                            color = Color.Black
+                            color = AppColors.Black
                         )
                     )
                 }
@@ -81,20 +72,19 @@ internal fun CommonButtonContent(
 
             Box(
                 modifier = Modifier
-                    .padding(end = 12.dp)
-                    .width(24.dp)
-                    .height(24.dp)
-                    .background(Color.Transparent),
+                    .padding(end = Dimensions.ButtonContentEndPadding)
+                    .width(Dimensions.IconSize)
+                    .height(Dimensions.IconSize)
+                    .background(AppColors.Transparent),
                 contentAlignment = Alignment.Center
             ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_arrow_forward_light_mode),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .width(8.dp)
-                            .height(14.dp)
-//                            .background(Color.Transparent)
-                    )
+                Image(
+                    painter = painterResource(id = R.drawable.ic_arrow_forward_light_mode),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .width(Dimensions.ArrowIconWidth)
+                        .height(Dimensions.ArrowIconHeight)
+                )
             }
         }
     }

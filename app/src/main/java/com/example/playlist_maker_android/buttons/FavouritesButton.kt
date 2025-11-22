@@ -1,17 +1,16 @@
 package com.example.playlist_maker_android.buttons
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.example.playlist_maker_android.BaseButton
 import com.example.playlist_maker_android.CommonButtonContent
 import com.example.playlist_maker_android.R
+import com.example.playlist_maker_android.ui.theme.Dimensions
+import com.example.playlist_maker_android.ui.theme.PlaylistmakerandroidTheme
 
 @Composable
 internal fun FavouritesButtonContent() {
@@ -22,24 +21,20 @@ internal fun FavouritesButtonContent() {
 }
 
 @Composable
-internal fun FavouritesButton() {
-    val context = LocalContext.current
-
+internal fun FavouritesButton(
+    onClick: () -> Unit
+) {
     BaseButton(
-        {
-            Toast.makeText(
-                context,
-                "Нажата кнопка Избранное",
-                Toast.LENGTH_SHORT
-            ).show()
-        },
-        Modifier.padding(horizontal = 16.dp, vertical = 0.dp),
-        { FavouritesButtonContent() }
+        onClick = onClick,
+        modifier = Modifier.padding(horizontal = Dimensions.ButtonHorizontalPadding),
+        content = { FavouritesButtonContent() }
     )
 }
 
 @Preview(showSystemUi = true, showBackground = false)
 @Composable
 internal fun FavouritesButtonPreview() {
-    FavouritesButton()
+    PlaylistmakerandroidTheme {
+        FavouritesButton(onClick = {})
+    }
 }
