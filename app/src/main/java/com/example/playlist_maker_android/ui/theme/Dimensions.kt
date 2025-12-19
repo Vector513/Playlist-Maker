@@ -20,6 +20,11 @@ object Dimensions {
     val ButtonContentWidth = 183.5.dp
     val SearchPanelHeaderHeight = 56.dp
     val BoxSize = 48.dp
-    val ArrowBackSize = 16.dp
+    val ArrowBackIconSize = 16.dp
+    val SearchBarHeight = 52.dp
+    val SearchBarRadius = 8.dp
+    val SearchBarWrapperSize = 36.dp
+    val SearchBarIconSize = 14.dp
+    val ClearIconSize = 12.dp
 }
 
