@@ -23,7 +23,7 @@ object AppTypography {
     val PanelHeaderText = TextStyle(
         fontFamily = YSDisplay,
         fontWeight = FontWeight.Medium,
-        fontSize = 22.sp,
+        fontSize = 26.sp,
         lineHeight = 22.sp,
         letterSpacing = 0.sp
     )

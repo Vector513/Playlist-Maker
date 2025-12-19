@@ -18,5 +18,8 @@ object Dimensions {
     val ButtonContentStartPadding = 12.dp
     val ButtonContentEndPadding = 12.dp
     val ButtonContentWidth = 183.5.dp
+    val SearchPanelHeaderHeight = 56.dp
+    val BoxSize = 48.dp
+    val ArrowBackSize = 16.dp
 }
 
