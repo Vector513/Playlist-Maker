@@ -44,23 +44,20 @@ import com.example.playlist_maker_android.ui.theme.PlaylistmakerandroidTheme
 internal fun SearchScreen(
     onBack: () -> Unit
 ) {
-    PlaylistmakerandroidTheme {
-        Scaffold(
-            modifier = Modifier.fillMaxSize()
-        ) { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .background(MaterialTheme.colorScheme.primary)
-                    .padding(innerPadding)
+    Scaffold(
+        modifier = Modifier.fillMaxSize()
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .background(MaterialTheme.colorScheme.primary)
+                .padding(innerPadding)
             ) {
-                SearchPanelHeader(onBack)
-                SearchBar()
-            }
+            SearchPanelHeader(onBack)
+            SearchBar()
         }
     }
 }
-
 
 @Composable
 private fun SearchPanelHeader(onBack: () -> Unit) {

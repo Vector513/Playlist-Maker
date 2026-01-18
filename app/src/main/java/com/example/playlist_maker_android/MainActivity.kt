@@ -20,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.playlist_maker_android.buttons.FavouritesButton
 import com.example.playlist_maker_android.buttons.PlaylistButton
@@ -33,34 +32,41 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContent {
-            val navController: NavHostController = rememberNavController()
-            PlaylistHost(navController)
-        }
 
+        setContent {
+            val navController = rememberNavController()
+
+            PlaylistmakerandroidTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.primary
+                ) {
+                    PlaylistHost(navController)
+                }
+            }
+        }
     }
 }
+
 
 @Composable
 internal fun MainScreen(
     onSearchClick: () -> Unit,
     onSettingsClick: () -> Unit
 ) {
-    PlaylistmakerandroidTheme {
-        Scaffold(
-            modifier = Modifier.fillMaxSize()
+    Scaffold(
+        modifier = Modifier.fillMaxSize()
         ) { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .background(MaterialTheme.colorScheme.background)
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .background(MaterialTheme.colorScheme.background)
             ) {
-                PanelHeader()
-                Menu(
-                    onSearchClick = onSearchClick,
-                    onSettingsClick = onSettingsClick
-                )
-            }
+            PanelHeader()
+            Menu(
+                onSearchClick = onSearchClick,
+                onSettingsClick = onSettingsClick
+            )
         }
     }
 }

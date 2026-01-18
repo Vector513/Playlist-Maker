@@ -44,17 +44,15 @@ import androidx.core.net.toUri
 internal fun SettingsScreen(
     onBack: () -> Unit
 ) {
-    PlaylistmakerandroidTheme {
-        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .background(MaterialTheme.colorScheme.primary)
-                    .padding(innerPadding)
+    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .background(MaterialTheme.colorScheme.primary)
+                .padding(innerPadding)
             ) {
-                SettingsPanelHeader(onBack)
-                ListOfButtons()
-            }
+            SettingsPanelHeader(onBack)
+            ListOfButtons()
         }
     }
 }
