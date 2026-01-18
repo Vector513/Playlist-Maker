@@ -7,22 +7,25 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.playlist_maker_android.buttons.FavouritesButton
 import com.example.playlist_maker_android.buttons.PlaylistButton
 import com.example.playlist_maker_android.buttons.SearchButton
 import com.example.playlist_maker_android.buttons.SettingsButton
-import com.example.playlist_maker_android.ui.theme.AppColors
 import com.example.playlist_maker_android.ui.theme.Dimensions
 import com.example.playlist_maker_android.ui.theme.PlaylistmakerandroidTheme
 
@@ -31,27 +34,18 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            PlaylistmakerandroidTheme {
-                Scaffold(
-                    modifier = Modifier.fillMaxSize()
-                ) { innerPadding ->
-                    Column(
-                        modifier = Modifier
-                            .background(AppColors.PrimaryBlue)
-                            .padding(innerPadding)
-                    ) {
-                        PanelHeader()
-                        Menu()
-                    }
-                }
-            }
+            val navController: NavHostController = rememberNavController()
+            PlaylistHost(navController)
         }
+
     }
 }
 
-@Preview(device = "spec:width=411dp,height=891dp", showSystemUi = true, showBackground = true)
 @Composable
-private fun Main() {
+internal fun MainScreen(
+    onSearchClick: () -> Unit,
+    onSettingsClick: () -> Unit
+) {
     PlaylistmakerandroidTheme {
         Scaffold(
             modifier = Modifier.fillMaxSize()
@@ -59,18 +53,23 @@ private fun Main() {
             Column(
                 modifier = Modifier
                     .padding(innerPadding)
-                    .background(AppColors.PrimaryBlue)
+                    .background(MaterialTheme.colorScheme.background)
             ) {
                 PanelHeader()
-                Menu()
+                Menu(
+                    onSearchClick = onSearchClick,
+                    onSettingsClick = onSettingsClick
+                )
             }
         }
     }
 }
 
-@Preview(showSystemUi = true)
 @Composable
-private fun Menu() {
+private fun Menu(
+    onSearchClick: () -> Unit,
+    onSettingsClick: () -> Unit
+) {
     val context = LocalContext.current
     
     Surface(
@@ -80,9 +79,8 @@ private fun Menu() {
             bottomStart = 0.dp,
             bottomEnd = 0.dp
         ),
-        color = AppColors.White,
+        color = MaterialTheme.colorScheme.surface,
         modifier = Modifier
-            .background(AppColors.Transparent)
             .fillMaxHeight()
             .padding(
                 start = 0.dp,
@@ -92,7 +90,12 @@ private fun Menu() {
             )
     ) {
         Column {
-            SearchButton()
+            // TODO: Заменить Spacer на modifier.safePadding...
+            //  Создать AppSpacing для padding
+
+            Spacer(modifier = Modifier
+                .height(Dimensions.ButtonVerticalPadding))
+            SearchButton(onNavigateToSearch = onSearchClick)
             PlaylistButton(onClick = {
                 Toast.makeText(
                     context,
@@ -107,7 +110,7 @@ private fun Menu() {
                     Toast.LENGTH_SHORT
                 ).show()
             })
-            SettingsButton()
+            SettingsButton(onNavigateToSettings = onSettingsClick)
         }
     }
 }

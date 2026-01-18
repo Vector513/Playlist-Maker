@@ -34,7 +34,7 @@ internal fun PlaylistButtonPreview() {
 @Composable
 internal fun PlaylistButtonContent() {
     CommonButtonContent(
-        painterResource(R.drawable.ic_library_light_mode),
+        painterResource(R.drawable.ic_library),
         stringResource(R.string.library_button_text)
     )
 }

@@ -3,11 +3,10 @@ package com.example.playlist_maker_android.ui.theme
 import androidx.compose.ui.graphics.Color
 
 object AppColors {
-    val PrimaryBlue = Color(0xFF3772E7) // RGB(55, 114, 231)
+    val YPBlue = Color(0xFF3772E7)
     val White = Color(0xFFFFFFFF)
-    val Black = Color(0xFF000000)
-    val LightGray = Color(0xFFE6E8EB)
-    val Gray = Color(0xFFAEAFB4)
-    val Transparent = Color.Transparent
+    val YPBlack = Color(0xFF1A1B22)
+    val YPLightGray = Color(0xFFE6E8EB)
+    val YPTextGray = Color(0xFFAEAFB4)
 }
 

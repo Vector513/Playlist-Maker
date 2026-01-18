@@ -5,13 +5,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.playlist_maker_android.ui.theme.AppColors
-import com.example.playlist_maker_android.ui.theme.AppTypography
 import com.example.playlist_maker_android.ui.theme.Dimensions
 import com.example.playlist_maker_android.ui.theme.PlaylistmakerandroidTheme
 
@@ -21,12 +20,12 @@ internal fun PanelHeader() {
         modifier = Modifier
             .fillMaxWidth()
             .height(Dimensions.PanelHeaderHeight)
-            .background(AppColors.PrimaryBlue)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Text(
             text = stringResource(R.string.panel_header_text),
-            color = AppColors.White,
-            style = AppTypography.PanelHeaderText,
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.titleLarge,
             modifier = Modifier
                 .padding(
                     start = Dimensions.PanelHeaderPadding,

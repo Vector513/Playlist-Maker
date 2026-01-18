@@ -15,7 +15,7 @@ import com.example.playlist_maker_android.ui.theme.PlaylistmakerandroidTheme
 @Composable
 internal fun FavouritesButtonContent() {
     CommonButtonContent(
-        painterResource(R.drawable.ic_favourites_light_mode),
+        painterResource(R.drawable.ic_favourites),
         stringResource(R.string.favourites_button_text)
     )
 }

@@ -11,15 +11,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
-import com.example.playlist_maker_android.ui.theme.AppColors
-import com.example.playlist_maker_android.ui.theme.AppTypography
+import androidx.compose.ui.unit.dp
 import com.example.playlist_maker_android.ui.theme.Dimensions
 
 @Composable
@@ -28,21 +28,24 @@ internal fun CommonButtonContent(
     buttonText: String
 ) {
     Box(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.primary)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxWidth()
-                .background(AppColors.Transparent)
+//                .background(MaterialTheme.colorScheme.primary)
         ) {
             Box(
                 modifier = Modifier
                     .padding(start = Dimensions.ButtonContentStartPadding)
                     .width(Dimensions.ButtonContentWidth)
                     .fillMaxHeight()
-                    .background(AppColors.Transparent),
+//                    .background(MaterialTheme.colorScheme.primary)
+,
                 contentAlignment = Alignment.CenterStart
             ) {
                 Row(
@@ -57,14 +60,19 @@ internal fun CommonButtonContent(
                         Image(
                             painter = iconResource,
                             contentDescription = null,
-                            modifier = Modifier.size(Dimensions.IconSizeSmall)
+                            modifier = Modifier
+                                .size(Dimensions.IconSizeSmall)
+//                                .background(MaterialTheme.colorScheme.primary)
+                                ,
+                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
                         )
                     }
                     Text(
                         text = buttonText,
-                        style = AppTypography.ButtonText.copy(
-                            textAlign = TextAlign.Center,
-                            color = AppColors.Black
+                        modifier = Modifier
+                            .padding(start = 8.dp),
+                        style = MaterialTheme.typography.labelLarge.copy(
+                            color = MaterialTheme.colorScheme.onPrimary
                         )
                     )
                 }
@@ -75,15 +83,19 @@ internal fun CommonButtonContent(
                     .padding(end = Dimensions.ButtonContentEndPadding)
                     .width(Dimensions.IconSize)
                     .height(Dimensions.IconSize)
-                    .background(AppColors.Transparent),
+//                    .background(MaterialTheme.colorScheme.primary)
+                    ,
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.ic_arrow_forward_light_mode),
+                    painter = painterResource(id = R.drawable.ic_arrow_forward),
                     contentDescription = null,
                     modifier = Modifier
                         .width(Dimensions.ArrowIconWidth)
                         .height(Dimensions.ArrowIconHeight)
+//                        .background(MaterialTheme.colorScheme.primary)
+                        ,
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
                 )
             }
         }
