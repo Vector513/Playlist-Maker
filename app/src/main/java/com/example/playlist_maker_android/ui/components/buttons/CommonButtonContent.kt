@@ -1,4 +1,4 @@
-package com.example.playlist_maker_android
+package com.example.playlist_maker_android.ui.components.buttons
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.playlist_maker_android.R
 import com.example.playlist_maker_android.ui.theme.Dimensions
 
 @Composable

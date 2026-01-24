@@ -1,4 +1,4 @@
-package com.example.playlist_maker_android
+package com.example.playlist_maker_android.ui.main
 
 import android.os.Bundle
 import android.widget.Toast
@@ -21,10 +21,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
-import com.example.playlist_maker_android.buttons.FavouritesButton
-import com.example.playlist_maker_android.buttons.PlaylistButton
-import com.example.playlist_maker_android.buttons.SearchButton
-import com.example.playlist_maker_android.buttons.SettingsButton
+import com.example.playlist_maker_android.ui.navigation.PlaylistHost
+import com.example.playlist_maker_android.ui.favourites.components.FavouritesButton
+import com.example.playlist_maker_android.ui.playlist.components.PlaylistButton
+import com.example.playlist_maker_android.ui.search.components.SearchButton
+import com.example.playlist_maker_android.ui.settings.components.SettingsButton
+import com.example.playlist_maker_android.ui.main.components.PanelHeader
 import com.example.playlist_maker_android.ui.theme.Dimensions
 import com.example.playlist_maker_android.ui.theme.PlaylistmakerandroidTheme
 

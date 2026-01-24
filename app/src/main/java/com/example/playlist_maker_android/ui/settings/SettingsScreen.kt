@@ -1,4 +1,4 @@
-package com.example.playlist_maker_android
+package com.example.playlist_maker_android.ui.settings
 
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import com.example.playlist_maker_android.ui.theme.Dimensions
 import com.example.playlist_maker_android.ui.theme.PlaylistmakerandroidTheme
 import androidx.core.net.toUri
+import com.example.playlist_maker_android.R
 
 @Composable
 internal fun SettingsScreen(

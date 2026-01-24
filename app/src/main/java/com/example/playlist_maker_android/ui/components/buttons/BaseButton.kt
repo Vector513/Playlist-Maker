@@ -1,4 +1,4 @@
-package com.example.playlist_maker_android
+package com.example.playlist_maker_android.ui.components.buttons
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth

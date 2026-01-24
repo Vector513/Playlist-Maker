@@ -1,10 +1,13 @@
-package com.example.playlist_maker_android
+package com.example.playlist_maker_android.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.playlist_maker_android.ui.main.MainScreen
+import com.example.playlist_maker_android.ui.search.SearchScreen
+import com.example.playlist_maker_android.ui.settings.SettingsScreen
 
 enum class Screen(val route: String) {
     MAIN("main"),

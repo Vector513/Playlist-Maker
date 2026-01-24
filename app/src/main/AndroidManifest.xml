@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Playlistmakerandroid">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.main.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Playlistmakerandroid">
             <intent-filter>
