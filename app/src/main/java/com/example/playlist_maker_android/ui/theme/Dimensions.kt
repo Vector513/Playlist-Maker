@@ -28,5 +28,10 @@ object Dimensions {
     val ShareIconWidth = 16.dp
     val ShareIconHeight = 18.dp
     val SettingsButtonHeight = 61.dp
+    val MusicNotFoundSize = 120.dp
+    val TrackHeight = 61.dp
+    val TrackImageSmallSize = 45.dp
+    val TrackMiniInfoHeight = 13.dp
+    val PointSize = 3.dp
 }
 

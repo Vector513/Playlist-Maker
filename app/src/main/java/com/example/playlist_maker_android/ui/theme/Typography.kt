@@ -30,11 +30,26 @@ object AppTypography {
         textAlign = TextAlign.Center
     )
 
-    val Input = TextStyle(
+    val BodyMedium = TextStyle(
         fontFamily = YSDisplay,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 16.sp,
+        letterSpacing = 0.sp
+    )
+    val BodyLarge = TextStyle(
+        fontFamily = YSDisplay,
+        fontWeight = FontWeight.Normal,
+        fontSize = 19.sp,
+        lineHeight = 19.sp,
+        letterSpacing = 0.sp
+    )
+
+    val BodySmall = TextStyle(
+        fontFamily = YSDisplay,
+        fontWeight = FontWeight.Normal,
+        fontSize = 11.sp,
+        lineHeight = 11.sp,
         letterSpacing = 0.sp
     )
 }
