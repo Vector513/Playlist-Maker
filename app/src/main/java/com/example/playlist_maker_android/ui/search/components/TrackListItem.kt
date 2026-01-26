@@ -48,7 +48,7 @@ fun TrackListItem(track: Track) {
         Spacer(modifier = Modifier.width(8.dp))
 
         Column(
-            modifier = Modifier.padding(),
+            modifier = Modifier.weight(1f),
             horizontalAlignment = Alignment.Start
         ) {
             Text(
@@ -97,16 +97,24 @@ fun TrackListItem(track: Track) {
             }
         }
 
-//        Column(
-//            modifier = Modifier.weight(1f),
-//            horizontalAlignment = Alignment.CenterHorizontally
-//        ) {
-//            Text(
-//                track.trackTime,
-//                style = MaterialTheme.typography.bodySmall.copy(
-//                    color = MaterialTheme.colorScheme.onPrimary
-//                )
-//            )
-//        }
+        Spacer(Modifier.width(8.dp))
+
+        Box(
+            modifier = Modifier
+                .padding(end = Dimensions.ButtonContentEndPadding)
+                .size(Dimensions.IconSize)
+            ,
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_arrow_forward),
+                contentDescription = "",
+                modifier = Modifier
+                    .width(Dimensions.ArrowIconWidth)
+                    .height(Dimensions.ArrowIconHeight)
+                ,
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
+            )
+        }
     }
 }
