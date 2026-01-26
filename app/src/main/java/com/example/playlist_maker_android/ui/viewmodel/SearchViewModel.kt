@@ -1,10 +1,10 @@
 package com.example.playlist_maker_android.ui.viewmodel
 
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.playlist_maker_android.creator.Creator
-import com.example.playlist_maker_android.data.network.Track
 import com.example.playlist_maker_android.domain.TracksRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,18 +13,14 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.IOException
 
-sealed class SearchState {
-    object Initial: SearchState() // Первоначальное cостояние экрана
-    object Searching: SearchState() // Cостояние экрана при начале поиска
-    data class Success(val foundList: List<Track>): SearchState() // Cостояние экрана при успешном завершении поиска
-    data class Fail(val error: String): SearchState() // Cостояние экрана, если при запросе к серверу произошла ошибка
-}
-
 class SearchViewModel(
     private val tracksRepository: TracksRepository
 ) : ViewModel() {
     private val _searchScreenState = MutableStateFlow<SearchState>(SearchState.Initial)
     val searchScreenState  = _searchScreenState.asStateFlow()
+
+    private val _textFieldState = MutableStateFlow<TextFieldState>(TextFieldState(""))
+    val textFieldState = _textFieldState.asStateFlow()
 
     fun search(whatSearch: String){
         viewModelScope.launch(Dispatchers.IO) {
@@ -38,6 +34,10 @@ class SearchViewModel(
         }
     }
 
+    fun clearTextField() {
+        _textFieldState.update { TextFieldState("") }
+        _searchScreenState.update { SearchState.Initial }
+    }
 
     companion object {
         fun getViewModelFactory(): ViewModelProvider.Factory =

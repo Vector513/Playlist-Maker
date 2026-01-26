@@ -8,7 +8,6 @@ import androidx.navigation.compose.composable
 import com.example.playlist_maker_android.ui.main.MainScreen
 import com.example.playlist_maker_android.ui.search.SearchScreen
 import com.example.playlist_maker_android.ui.settings.SettingsScreen
-import com.example.playlist_maker_android.ui.viewmodel.SearchViewModel
 
 enum class Screen(val route: String) {
     MAIN("main"),
@@ -17,7 +16,7 @@ enum class Screen(val route: String) {
 }
 
 @Composable
-fun PlaylistHost(navController: NavHostController, searchViewModel: SearchViewModel) {
+fun PlaylistHost(navController: NavHostController) {
     NavHost(
         navController = navController,
         startDestination = Screen.MAIN.route
@@ -36,7 +35,6 @@ fun PlaylistHost(navController: NavHostController, searchViewModel: SearchViewMo
 
         composable(Screen.SEARCH.route) {
             SearchScreen(
-                searchViewModel,
                 onBack = {
                     navController.popBackStack()
                 }
