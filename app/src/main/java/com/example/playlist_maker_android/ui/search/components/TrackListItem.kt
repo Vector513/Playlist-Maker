@@ -40,9 +40,10 @@ fun TrackListItem(track: Track) {
         Spacer(Modifier.width(13.dp))
 
         Image(
-            painter = painterResource(id = R.drawable.ic_launcher_background),
+            painter = painterResource(id = R.mipmap.ic_music),
             contentDescription = "Трек ${track.trackName}",
-            modifier = Modifier.size(Dimensions.TrackImageSmallSize)
+            modifier = Modifier.size(Dimensions.TrackImageSmallSize),
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurfaceVariant)
         )
 
         Spacer(modifier = Modifier.width(8.dp))
