@@ -152,7 +152,7 @@ private fun ListOfButtons() {
                 Text(
                     text = stringResource(R.string.dark_theme_text),
                     modifier = Modifier.padding(start = 16.dp),
-                    style = MaterialTheme.typography.bodyLarge.copy(
+                    style = MaterialTheme.typography.bodyMedium.copy(
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 )
@@ -215,7 +215,7 @@ private fun ShareAppButton() {
                 text = stringResource(R.string.share_app_text),
                 modifier = Modifier
                     .padding(start=16.dp),
-                style = MaterialTheme.typography.bodyLarge.copy(
+                style = MaterialTheme.typography.bodyMedium.copy(
                     color = MaterialTheme.colorScheme.onSurface
                 )
             )
@@ -281,7 +281,7 @@ private fun SupportButton() {
                 text = stringResource(R.string.support_text),
                 modifier = Modifier
                     .padding(start=16.dp),
-                style = MaterialTheme.typography.bodyLarge.copy(
+                style = MaterialTheme.typography.bodyMedium.copy(
                     color = MaterialTheme.colorScheme.onSurface
                 )
             )
@@ -367,7 +367,7 @@ private fun UserAgreementButton() {
                 text = stringResource(R.string.user_agreement_text),
                 modifier = Modifier
                     .padding(start=16.dp),
-                style = MaterialTheme.typography.bodyLarge.copy(
+                style = MaterialTheme.typography.bodyMedium.copy(
                     color = MaterialTheme.colorScheme.onSurface
                 )
             )
