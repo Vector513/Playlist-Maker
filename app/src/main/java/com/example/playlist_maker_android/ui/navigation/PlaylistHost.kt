@@ -6,12 +6,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.playlist_maker_android.ui.main.MainScreen
+import com.example.playlist_maker_android.ui.playlists.PlaylistsScreen
 import com.example.playlist_maker_android.ui.search.SearchScreen
 import com.example.playlist_maker_android.ui.settings.SettingsScreen
 
 enum class Screen(val route: String) {
     MAIN("main"),
     SEARCH("search"),
+    PLAYLISTS("playlists"),
     SETTINGS("settings")
 }
 
@@ -27,6 +29,9 @@ fun PlaylistHost(navController: NavHostController) {
                 onSearchClick = {
                     navigateToSearch(navController)
                 },
+                onPlaylistsClick = {
+                    navigateToPlaylists(navController)
+                },
                 onSettingsClick = {
                     navigateToSettings(navController)
                 }
@@ -35,6 +40,14 @@ fun PlaylistHost(navController: NavHostController) {
 
         composable(Screen.SEARCH.route) {
             SearchScreen(
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(Screen.PLAYLISTS.route) {
+            PlaylistsScreen(
                 onBack = {
                     navController.popBackStack()
                 }
@@ -54,6 +67,10 @@ fun PlaylistHost(navController: NavHostController) {
 
 private fun navigateToSearch(navController: NavController) {
     navController.navigate(Screen.SEARCH.route)
+}
+
+private fun navigateToPlaylists(navController: NavController) {
+    navController.navigate(Screen.PLAYLISTS.route)
 }
 
 private fun navigateToSettings(navController: NavController) {

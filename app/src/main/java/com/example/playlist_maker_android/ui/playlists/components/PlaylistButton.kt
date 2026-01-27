@@ -1,4 +1,4 @@
-package com.example.playlist_maker_android.ui.playlist.components
+package com.example.playlist_maker_android.ui.playlists.components
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable

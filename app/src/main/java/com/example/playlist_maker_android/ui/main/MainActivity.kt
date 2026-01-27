@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.example.playlist_maker_android.ui.navigation.PlaylistHost
 import com.example.playlist_maker_android.ui.favourites.components.FavouritesButton
-import com.example.playlist_maker_android.ui.playlist.components.PlaylistButton
+import com.example.playlist_maker_android.ui.playlists.components.PlaylistButton
 import com.example.playlist_maker_android.ui.search.components.SearchButton
 import com.example.playlist_maker_android.ui.settings.components.SettingsButton
 import com.example.playlist_maker_android.ui.main.components.PanelHeader
@@ -54,6 +54,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 internal fun MainScreen(
     onSearchClick: () -> Unit,
+    onPlaylistsClick: () -> Unit,
     onSettingsClick: () -> Unit
 ) {
     Scaffold(
@@ -67,6 +68,7 @@ internal fun MainScreen(
             PanelHeader()
             Menu(
                 onSearchClick = onSearchClick,
+                onPlaylistsClick = onPlaylistsClick,
                 onSettingsClick = onSettingsClick
             )
         }
@@ -76,6 +78,7 @@ internal fun MainScreen(
 @Composable
 private fun Menu(
     onSearchClick: () -> Unit,
+    onPlaylistsClick: () -> Unit,
     onSettingsClick: () -> Unit
 ) {
     val context = LocalContext.current
@@ -104,13 +107,7 @@ private fun Menu(
             Spacer(modifier = Modifier
                 .height(Dimensions.ButtonVerticalPadding))
             SearchButton(onNavigateToSearch = onSearchClick)
-            PlaylistButton(onClick = {
-                Toast.makeText(
-                    context,
-                    "Нажата кнопка Плейлисты",
-                    Toast.LENGTH_SHORT
-                ).show()
-            })
+            PlaylistButton(onClick = onPlaylistsClick)
             FavouritesButton(onClick = {
                 Toast.makeText(
                     context,
