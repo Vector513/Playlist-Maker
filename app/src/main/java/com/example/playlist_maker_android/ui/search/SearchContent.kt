@@ -10,7 +10,8 @@ import com.example.playlist_maker_android.ui.viewmodel.SearchState
 
 @Composable
 fun SearchContent(
-    screenState: SearchState
+    screenState: SearchState,
+    text: CharSequence
 ) {
     Column(
         modifier = Modifier
@@ -19,9 +20,9 @@ fun SearchContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         when (screenState) {
-            is SearchState.Initial -> SearchEmptyState()
+            is SearchState.Initial -> SearchEmptyState(text)
             is SearchState.Searching -> SearchLoadingState()
-            is SearchState.Success -> SearchResultsState(screenState.foundList)
+            is SearchState.Success -> SearchResultsState(screenState.foundList, {})
             is SearchState.Fail -> SearchErrorState(screenState.error)
         }
     }

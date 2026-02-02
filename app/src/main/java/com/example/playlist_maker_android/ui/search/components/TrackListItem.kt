@@ -2,6 +2,7 @@ package com.example.playlist_maker_android.ui.search.components
 
 import com.example.playlist_maker_android.R
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,11 +26,19 @@ import com.example.playlist_maker_android.data.network.Track
 import com.example.playlist_maker_android.ui.theme.Dimensions
 
 @Composable
-fun TrackListItem(track: Track) {
+fun TrackListItem(
+    track: Track,
+    onClick: () -> Unit,
+    onLongClick: (() -> Unit)? = null
+) {
     Row(
         modifier = Modifier
             .height(Dimensions.TrackHeight)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .combinedClickable(
+                onClick = { onClick() },
+                onLongClick = { onLongClick?.invoke() }
+            ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {

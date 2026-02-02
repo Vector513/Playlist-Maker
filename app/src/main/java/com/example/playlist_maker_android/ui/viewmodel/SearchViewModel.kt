@@ -5,14 +5,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.playlist_maker_android.creator.Creator
+import com.example.playlist_maker_android.data.SearchHistoryRepositoryImpl
+import com.example.playlist_maker_android.data.Word
 import com.example.playlist_maker_android.domain.TracksRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.IOException
 
+@OptIn(FlowPreview::class)
 class SearchViewModel(
     private val tracksRepository: TracksRepository
 ) : ViewModel() {
@@ -22,13 +28,29 @@ class SearchViewModel(
     private val _textFieldState = MutableStateFlow<TextFieldState>(TextFieldState(""))
     val textFieldState = _textFieldState.asStateFlow()
 
-    fun search(whatSearch: String){
+    private val searchHistoryRepository = SearchHistoryRepositoryImpl(scope = viewModelScope)
+
+    init {
+        viewModelScope.launch {
+            _textFieldState
+                .debounce(1000)
+                .distinctUntilChanged()
+                .collect { query ->
+                    if (query.text.isNotEmpty()) {
+                        search(query.text.toString())
+                    }
+                }
+        }
+    }
+
+    fun search(request: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 _searchScreenState.update { SearchState.Searching }
-                val list = tracksRepository.searchTracks(expression = whatSearch)
+                searchHistoryRepository.addToHistory(Word(word = request))
+                val list = tracksRepository.searchTracks(expression = request)
                 _searchScreenState.update { SearchState.Success(foundList = list) }
-            } catch (e: IOException){
+            } catch (e: IOException) {
                 _searchScreenState.update { SearchState.Fail(e.message.toString()) }
             }
         }
@@ -38,6 +60,8 @@ class SearchViewModel(
         _textFieldState.update { TextFieldState("") }
         _searchScreenState.update { SearchState.Initial }
     }
+
+    suspend fun getHistoryList() = searchHistoryRepository.getHistoryRequests()
 
     companion object {
         fun getViewModelFactory(): ViewModelProvider.Factory =

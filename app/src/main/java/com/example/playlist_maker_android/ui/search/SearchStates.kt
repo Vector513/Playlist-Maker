@@ -23,13 +23,20 @@ import com.example.playlist_maker_android.ui.search.components.TrackListItem
 import com.example.playlist_maker_android.ui.theme.Dimensions
 
 @Composable
-fun SearchEmptyState() {
-    Text(
-        "Введите строку для поиска",
-        style = MaterialTheme.typography.bodyLarge,
-        color = MaterialTheme.colorScheme.onPrimary,
-        textAlign = TextAlign.Center
-    )
+fun SearchEmptyState(
+    text: CharSequence
+) {
+    if (text.isEmpty())  {
+        Text(
+            "Введите строку для поиска",
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onPrimary,
+            textAlign = TextAlign.Center
+        )
+    }
+    else {
+        SearchLoadingState()
+    }
 }
 
 @Composable
@@ -48,7 +55,10 @@ fun SearchErrorState(error: String) {
 }
 
 @Composable
-fun SearchResultsState(tracks: List<Track>) {
+fun SearchResultsState(
+    tracks: List<Track>,
+    onClick: (Int?) -> Unit
+) {
     if (tracks.isEmpty()) {
         SearchNoResults()
     } else {
@@ -58,7 +68,10 @@ fun SearchResultsState(tracks: List<Track>) {
             modifier = Modifier.fillMaxSize()
         ) {
             items(tracks.size) { index ->
-                TrackListItem(track = tracks[index])
+                TrackListItem(
+                    track = tracks[index],
+                    onClick = { onClick(index) }
+                )
             }
         }
     }
