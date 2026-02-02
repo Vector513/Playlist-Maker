@@ -25,7 +25,8 @@ private val DarkColorScheme = darkColorScheme(
     surface = AppColors.YPBlack,
     onSurface = AppColors.White,
     onSurfaceVariant = AppColors.White,
-    onTertiary = AppColors.YPBlack
+    onTertiary = AppColors.YPBlack,
+    tertiary = AppColors.YPTextGray
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -38,7 +39,8 @@ private val LightColorScheme = lightColorScheme(
     surface = AppColors.White,
     onSurface = AppColors.YPBlack,
     onSurfaceVariant = AppColors.YPTextGray,
-    onTertiary = AppColors.YPBlack
+    onTertiary = AppColors.YPBlack,
+    tertiary = AppColors.YPTextGray
 )
 
 @Composable

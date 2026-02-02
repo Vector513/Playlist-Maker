@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material3.Scaffold
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.input.setTextAndSelectAll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -67,7 +68,10 @@ internal fun SearchScreen(
                 historyList = historyList,
                 onSearchClick = { viewModel.search(textState.text.toString()) },
                 onClearClick = { viewModel.clearTextField() },
-                onHistoryClick = { viewModel.search(textState.text.toString()) }
+                onHistoryClick = { word ->
+                    textState.setTextAndSelectAll(word.word)
+                    viewModel.search(textState.text.toString())
+                }
             )
 
             SearchContent(

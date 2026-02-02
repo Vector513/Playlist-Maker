@@ -8,11 +8,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -56,18 +58,34 @@ fun SearchBar(
     var isFocused by remember { mutableStateOf(false) }
     val placeholder = stringResource(R.string.search_bar_placeholder)
 
+    val showHistory = isFocused &&
+            textState.text.isEmpty() &&
+            historyList.isNotEmpty()
+
+    val searchBarShape = if (showHistory) {
+        RoundedCornerShape(
+            topStart = Dimensions.SearchBarRadius,
+            topEnd = Dimensions.SearchBarRadius,
+            bottomStart = 0.dp,
+            bottomEnd = 0.dp
+        )
+    } else {
+        RoundedCornerShape(Dimensions.SearchBarRadius)
+    }
+
+
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
 
         Row(
             modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .padding(start = 16.dp, top = 8.dp, end = 16.dp)
                 .height(36.dp)
                 .fillMaxWidth()
                 .background(
                     color = MaterialTheme.colorScheme.secondary,
-                    shape = RoundedCornerShape(Dimensions.SearchBarRadius)
+                    shape = searchBarShape
                 ),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -89,16 +107,18 @@ fun SearchBar(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth()
                     ) {
+                        Spacer(Modifier.width(13.dp))
 
                         Icon(
                             painter = painterResource(R.drawable.ic_search_bar),
                             contentDescription = "Поиск",
                             modifier = Modifier
-                                .padding(8.dp)
                                 .size(Dimensions.SearchBarIconSize)
                                 .clickable { onSearchClick() },
                             tint = MaterialTheme.colorScheme.onSecondary
                         )
+
+                        Spacer(Modifier.width(8.dp))
 
                         Box(
                             modifier = Modifier.weight(1f),
@@ -132,10 +152,20 @@ fun SearchBar(
             )
         }
 
+        if (showHistory) {
+            Box(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(
+                        MaterialTheme.colorScheme.tertiary.copy(alpha = 0.2f)
+                    )
+            )
+        }
+
         AnimatedVisibility(
-            visible = isFocused &&
-                    textState.text.isEmpty() &&
-                    historyList.isNotEmpty()
+            visible = showHistory
         ) {
             HistoryRequests(
                 historyList = historyList,

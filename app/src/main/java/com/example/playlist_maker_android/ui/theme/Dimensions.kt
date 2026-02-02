@@ -33,5 +33,7 @@ object Dimensions {
     val TrackImageSmallSize = 45.dp
     val TrackMiniInfoHeight = 13.dp
     val PointSize = 3.dp
+    val HistoryRequestHeight = 41.dp
+    val RecentRequestIconSize = 16.dp
 }
 
