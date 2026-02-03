@@ -3,34 +3,35 @@ package com.example.playlist_maker_android.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.playlist_maker_android.data.DatabaseMock
 import com.example.playlist_maker_android.data.Playlist
-import com.example.playlist_maker_android.data.PlaylistsRepositoryImpl
 import com.example.playlist_maker_android.data.network.Track
-import com.example.playlist_maker_android.data.network.TracksRepositoryImpl
-import com.example.playlist_maker_android.domain.PlaylistsRepository
 import com.example.playlist_maker_android.domain.TracksRepository
+import com.example.playlist_maker_android.creator.Creator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 class PlaylistsViewModel() : ViewModel() {
-    private val playlistsRepository: PlaylistsRepository =
-        PlaylistsRepositoryImpl(scope = viewModelScope)
-    private val tracksRepository: TracksRepository = TracksRepositoryImpl(scope = viewModelScope)
-    // Используем мок базы вместо репозитория
-    private val databaseRepository: DatabaseMock = DatabaseMock(scope = viewModelScope)
+    private val playlistsRepository = Creator.getPlaylistsRepository()
+    private val tracksRepository: TracksRepository = Creator.getTracksRepository()
 
-    val playlists: Flow<List<Playlist>> = flow {
-        val collectedPlaylists = mutableListOf<Playlist>()
-        playlistsRepository.getAllPlaylists().collect { playlist ->
-            collectedPlaylists.addAll(playlist)
-            emit(collectedPlaylists.toList())
+    val playlists: Flow<List<Playlist>> = playlistsRepository.getAllPlaylists()
+    val favoriteList: Flow<List<Track>> = tracksRepository.getFavoriteTracks()
+
+    private val _currentTrack = MutableStateFlow<Track?>(null)
+    val currentTrack = _currentTrack.asStateFlow()
+
+    fun loadTrack(trackId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val allTracks = tracksRepository.getAllTracks()
+            val found = allTracks.firstOrNull { it.id == trackId }
+            _currentTrack.value = found
         }
     }
-    val favoriteList: Flow<List<Track>> = databaseRepository.getFavoriteTracks()
 
     fun createNewPlayList(namePlaylist: String, description: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -38,12 +39,16 @@ class PlaylistsViewModel() : ViewModel() {
         }
     }
 
-    suspend fun insertTrackToPlaylist(track: Track, playlistId: Long) {
-        tracksRepository.insertTrackToPlaylist(track, playlistId)
+    fun insertTrackToPlaylist(track: Track, playlistId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            tracksRepository.insertTrackToPlaylist(track, playlistId)
+        }
     }
 
-    suspend fun toggleFavorite(track: Track, isFavorite: Boolean) {
-        tracksRepository.updateTrackFavoriteStatus(track, isFavorite)
+    fun toggleFavorite(track: Track, isFavorite: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            tracksRepository.updateTrackFavoriteStatus(track, isFavorite)
+        }
     }
 
     suspend fun deleteTrackFromPlaylist(track: Track) {

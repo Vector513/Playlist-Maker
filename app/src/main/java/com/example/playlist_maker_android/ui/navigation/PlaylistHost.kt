@@ -98,6 +98,7 @@ fun PlaylistHost(navController: NavHostController) {
             if (trackId != null) {
                 TrackScreen(
                     trackId = trackId,
+                    playlistsViewModel = playlistsViewModel,
                     onBack = {
                         val popped = navController.popBackStack()
                         if (!popped) {

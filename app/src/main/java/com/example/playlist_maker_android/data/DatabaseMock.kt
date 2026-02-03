@@ -17,6 +17,7 @@ class DatabaseMock(val scope: CoroutineScope) {
         Word("Yesterday"),
         Word("Let it Be"))
     private val _historyUpdates = MutableSharedFlow<Unit>()
+    private val _playlistsUpdates = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     private val playlists = mutableListOf<Playlist>()
     private val tracks = mutableListOf(
         Track(
@@ -125,17 +126,22 @@ class DatabaseMock(val scope: CoroutineScope) {
     }
 
     fun getAllPlaylists(): Flow<List<Playlist>> = flow {
-        delay(500) // Имитируем задержку загрузки из базы данных
-        val filteredPlaylists = mutableListOf<Playlist>()
-        playlists.forEach { playlist ->
-            val playlistTracks = tracks.filter { track ->
-                track.playlistId == playlist.id
+        fun buildPlaylists(): List<Playlist> {
+            val filteredPlaylists = mutableListOf<Playlist>()
+            playlists.forEach { playlist ->
+                val playlistTracks = tracks.filter { track ->
+                    track.playlistId == playlist.id
+                }
+                filteredPlaylists.add(playlist.copy(tracks = playlistTracks))
             }
-            filteredPlaylists.add(playlist.copy(tracks = playlistTracks))
+            return filteredPlaylists.toList()
         }
 
-        emit(filteredPlaylists.toList())
-        delay(100)
+        delay(500) // Имитируем задержку загрузки из базы данных
+        emit(buildPlaylists())
+        _playlistsUpdates.collect {
+            emit(buildPlaylists())
+        }
     }
 
     fun getPlaylist(id: Long): Flow<Playlist?> = flow {
@@ -151,14 +157,17 @@ class DatabaseMock(val scope: CoroutineScope) {
                 tracks = emptyList()
             )
         )
+        _playlistsUpdates.tryEmit(Unit)
     }
 
     fun deletePlaylistById(playlistId: Long) {
         playlists.removeIf { it.id == playlistId }
+        _playlistsUpdates.tryEmit(Unit)
     }
 
     fun deleteTrackFromPlaylist(trackId: Long) {
         tracks.removeIf { it.id == trackId }
+        _playlistsUpdates.tryEmit(Unit)
     }
 
     fun getTrackByNameAndArtist(track: Track): Flow<Track?> = flow {
@@ -168,6 +177,7 @@ class DatabaseMock(val scope: CoroutineScope) {
     fun insertTrack(track: Track) {
         tracks.removeIf { it.id == track.id }
         tracks.add(track)
+        _playlistsUpdates.tryEmit(Unit)
     }
 
     fun getFavoriteTracks(): Flow<List<Track>> = flow {
@@ -178,6 +188,7 @@ class DatabaseMock(val scope: CoroutineScope) {
 
     fun deleteTracksByPlaylistId(playlistId: Long) {
         tracks.removeIf { it.playlistId == playlistId }
+        _playlistsUpdates.tryEmit(Unit)
     }
 
     fun searchTracks(expression: String): List<Track> {

@@ -10,11 +10,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.CoroutineScope as KtCoroutineScope
 
 class TracksRepositoryImpl(
-    private val scope: CoroutineScope = KtCoroutineScope(Dispatchers.IO)
+    private val scope: CoroutineScope = KtCoroutineScope(Dispatchers.IO),
+    private val database: DatabaseMock = DatabaseMock(scope = scope)
 ) : TracksRepository {
-    private val database = DatabaseMock(
-        scope = scope
-    )
+    
 
     override suspend fun getAllTracks(): List<Track> {
         return database.searchTracks("")
