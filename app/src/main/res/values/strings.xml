@@ -23,4 +23,6 @@
     <string name="new_playlist_description_placeholder">Описание плейлиста</string>
     <string name="new_playlist_create_button">Создать</string>
     <string name="track_time_text">Длительность</string>
+    <string name="favourites_panel_header_text">Избранные треки</string>
+    <string name="favourites_media_empty_text">Ваша медиатека пуста</string>
 </resources>
