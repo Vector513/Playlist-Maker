@@ -86,8 +86,12 @@ fun PlaylistHost(navController: NavHostController) {
 
         composable(Screen.FAVOURITES.route) {
             FavouritesScreen(
+                playlistsViewModel = playlistsViewModel,
                 onBack = {
                     navController.popBackStack()
+                },
+                onTrackClick = { track ->
+                    navigateToTrack(navController, track)
                 }
             )
         }
