@@ -10,11 +10,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
@@ -31,8 +34,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.playlist_maker_android.data.network.Track
 import com.example.playlist_maker_android.ui.search.components.ArrowBackButton
 import com.example.playlist_maker_android.ui.theme.Dimensions
 import com.example.playlist_maker_android.R
@@ -80,73 +83,110 @@ fun TrackScreen(
 
             if (trackState != null) {
                 val track = trackState!!
-                // Синхронизируем локальное состояние лайка с актуальным треком
+
                 LaunchedEffect(track.id, track.favorite) {
                     isFavorite = track.favorite
                 }
 
-                // Детали трека
-                Text(
-                    text = track.trackName,
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = track.artistName,
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = track.trackTime,
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                )
+                // TODO: replace with image
+                Spacer(modifier = Modifier.height(312.dp))
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Кнопки "в избранное" и "в плейлист"
+                Text(
+                    text = track.trackName,
+                    modifier = Modifier.padding(start = 24.dp),
+                    style = MaterialTheme.typography.labelLarge.copy(
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Text(
+                    text = track.artistName,
+                    modifier = Modifier.padding(start = 24.dp),
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(54.dp))
+
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
+                        .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    Spacer(modifier = Modifier.width(24.dp))
+
+                    IconButton(onClick = {
+                        showBottomSheet = true
+                    },
+                        modifier = Modifier.size(51.dp),
+                        colors = IconButtonDefaults.iconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.tertiary
+                        )
+                    ) {
+                        Icon(
+                            painter = painterResource(
+                                id = R.drawable.ic_add_to_playlist
+                            ),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.weight(1f))
+
                     IconButton(onClick = {
                         val newValue = !isFavorite
                         isFavorite = newValue
                         playlistsViewModel.toggleFavorite(track, newValue)
-                    }) {
+                    },
+                        modifier = Modifier.size(51.dp),
+                        colors = IconButtonDefaults.iconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.tertiary
+                        )
+                    ) {
                         Icon(
                             painter = painterResource(
-                                id = R.drawable.ic_favourites
+                                id = R.drawable.ic_add_to_favourites
                             ),
                             contentDescription = null,
-                            tint = if (isFavorite) Color.Red else MaterialTheme.colorScheme.onPrimary
+                            tint = if (isFavorite) Color.Red else MaterialTheme.colorScheme.onBackground
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.width(24.dp))
+                }
 
-                    IconButton(onClick = {
-                        showBottomSheet = true
-                    }) {
-                        Icon(
-                            painter = painterResource(
-                                id = R.drawable.ic_library
-                            ),
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimary
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    Text(
+                        text = stringResource(R.string.track_time_text),
+                        style = MaterialTheme.typography.displaySmall.copy(
+                            color = MaterialTheme.colorScheme.tertiary
                         )
-                    }
+                    )
+
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    Text(
+                        text = track.trackTime,
+                        style = MaterialTheme.typography.displaySmall.copy(
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    )
+
+                    Spacer(modifier = Modifier.width(16.dp))
                 }
 
                 if (showBottomSheet) {
