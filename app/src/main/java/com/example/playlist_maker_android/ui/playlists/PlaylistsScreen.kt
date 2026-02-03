@@ -42,7 +42,7 @@ import com.example.playlist_maker_android.ui.viewmodel.PlaylistsViewModel
 
 @Composable
 fun PlaylistsScreen(
-    playlistsViewModel: PlaylistsViewModel = PlaylistsViewModel(),
+    playlistsViewModel: PlaylistsViewModel,
     addNewPlaylist: () -> Unit,
     navigateBack: () -> Unit,
     navigateToPlaylist: (Int) -> Unit

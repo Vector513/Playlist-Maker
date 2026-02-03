@@ -3,7 +3,6 @@ package com.example.playlist_maker_android.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.playlist_maker_android.creator.Creator
 import com.example.playlist_maker_android.data.DatabaseMock
 import com.example.playlist_maker_android.data.Playlist
 import com.example.playlist_maker_android.data.PlaylistsRepositoryImpl
@@ -65,7 +64,7 @@ class PlaylistsViewModel() : ViewModel() {
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return SearchViewModel(Creator.getTracksRepository()) as T
+                    return PlaylistsViewModel() as T
                 }
             }
     }

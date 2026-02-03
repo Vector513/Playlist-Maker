@@ -8,10 +8,13 @@ import androidx.navigation.compose.composable
 import com.example.playlist_maker_android.ui.main.MainScreen
 import com.example.playlist_maker_android.ui.favourites.FavouritesScreen
 import com.example.playlist_maker_android.ui.playlists.PlaylistsScreen
+import com.example.playlist_maker_android.ui.playlists.NewPlaylistScreen
 import com.example.playlist_maker_android.ui.search.SearchScreen
 import com.example.playlist_maker_android.ui.settings.SettingsScreen
 import com.example.playlist_maker_android.ui.track.TrackScreen
 import com.example.playlist_maker_android.data.network.Track
+import com.example.playlist_maker_android.ui.viewmodel.PlaylistsViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 enum class Screen(val route: String) {
     MAIN("main"),
@@ -26,6 +29,10 @@ enum class Screen(val route: String) {
 
 @Composable
 fun PlaylistHost(navController: NavHostController) {
+    val playlistsViewModel: PlaylistsViewModel = viewModel(
+        factory = PlaylistsViewModel.getViewModelFactory()
+    )
+
     NavHost(
         navController = navController,
         startDestination = Screen.MAIN.route
@@ -60,11 +67,21 @@ fun PlaylistHost(navController: NavHostController) {
 
         composable(Screen.PLAYLISTS.route) {
             PlaylistsScreen(
+                playlistsViewModel = playlistsViewModel,
                 addNewPlaylist = { navigateToNewPlayList(navController) },
                 navigateBack = { navController.popBackStack() }
             ) { index ->
                 navigateToPlayList(navController, index)
             }
+        }
+
+        composable(Screen.NEWPLAYLIST.route) {
+            NewPlaylistScreen(
+                playlistsViewModel = playlistsViewModel,
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
         }
 
         composable(Screen.FAVOURITES.route) {
