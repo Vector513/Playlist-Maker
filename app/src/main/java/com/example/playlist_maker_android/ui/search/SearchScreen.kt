@@ -21,6 +21,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.playlist_maker_android.data.Word
 import com.example.playlist_maker_android.ui.search.components.SearchPanelHeader
 import com.example.playlist_maker_android.ui.viewmodel.SearchViewModel
+import com.example.playlist_maker_android.data.network.Track
 import com.example.playlist_maker_android.ui.search.components.SearchBar
 import com.example.playlist_maker_android.ui.viewmodel.SearchState
 
@@ -29,6 +30,7 @@ internal fun SearchScreen(
     viewModel: SearchViewModel = viewModel(
         factory = SearchViewModel.getViewModelFactory()
     ),
+    onTrackClick: (Track) -> Unit,
     onBack: () -> Unit
 ) {
     val screenState by viewModel.searchScreenState.collectAsState()
@@ -42,7 +44,6 @@ internal fun SearchScreen(
     ) { innerPadding ->
         Column(
             modifier = Modifier
-
                 .fillMaxHeight()
                 .background(MaterialTheme.colorScheme.primary)
                 .padding(innerPadding)
@@ -76,7 +77,8 @@ internal fun SearchScreen(
 
             SearchContent(
                 screenState = screenState,
-                text = textState.text
+                text = textState.text,
+                onTrackClick = onTrackClick
             )
         }
     }

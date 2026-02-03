@@ -57,7 +57,7 @@ fun SearchErrorState(error: String) {
 @Composable
 fun SearchResultsState(
     tracks: List<Track>,
-    onClick: (Int?) -> Unit
+    onClick: (Track) -> Unit
 ) {
     if (tracks.isEmpty()) {
         SearchNoResults()
@@ -70,7 +70,7 @@ fun SearchResultsState(
             items(tracks.size) { index ->
                 TrackListItem(
                     track = tracks[index],
-                    onClick = { onClick(index) }
+                    onClick = { onClick(tracks[index]) }
                 )
             }
         }

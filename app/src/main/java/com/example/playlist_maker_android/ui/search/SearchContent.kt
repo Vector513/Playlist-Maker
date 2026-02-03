@@ -7,11 +7,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.playlist_maker_android.ui.viewmodel.SearchState
+import com.example.playlist_maker_android.data.network.Track
 
 @Composable
 fun SearchContent(
     screenState: SearchState,
-    text: CharSequence
+    text: CharSequence,
+    onTrackClick: (Track) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -22,7 +24,7 @@ fun SearchContent(
         when (screenState) {
             is SearchState.Initial -> SearchEmptyState(text)
             is SearchState.Searching -> SearchLoadingState()
-            is SearchState.Success -> SearchResultsState(screenState.foundList, {})
+            is SearchState.Success -> SearchResultsState(screenState.foundList, onTrackClick)
             is SearchState.Fail -> SearchErrorState(screenState.error)
         }
     }

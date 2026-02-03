@@ -55,6 +55,7 @@ class MainActivity : ComponentActivity() {
 internal fun MainScreen(
     onSearchClick: () -> Unit,
     onPlaylistsClick: () -> Unit,
+    onFavouritesClick: () -> Unit,
     onSettingsClick: () -> Unit
 ) {
     Scaffold(
@@ -69,6 +70,7 @@ internal fun MainScreen(
             Menu(
                 onSearchClick = onSearchClick,
                 onPlaylistsClick = onPlaylistsClick,
+                onFavouritesClick = onFavouritesClick,
                 onSettingsClick = onSettingsClick
             )
         }
@@ -79,10 +81,9 @@ internal fun MainScreen(
 private fun Menu(
     onSearchClick: () -> Unit,
     onPlaylistsClick: () -> Unit,
+    onFavouritesClick: () -> Unit,
     onSettingsClick: () -> Unit
 ) {
-    val context = LocalContext.current
-    
     Surface(
         shape = RoundedCornerShape(
             topStart = Dimensions.MenuCornerRadius,
@@ -108,13 +109,7 @@ private fun Menu(
                 .height(Dimensions.ButtonVerticalPadding))
             SearchButton(onNavigateToSearch = onSearchClick)
             PlaylistButton(onClick = onPlaylistsClick)
-            FavouritesButton(onClick = {
-                Toast.makeText(
-                    context,
-                    "Нажата кнопка Избранное",
-                    Toast.LENGTH_SHORT
-                ).show()
-            })
+            FavouritesButton(onClick = onFavouritesClick)
             SettingsButton(onNavigateToSettings = onSettingsClick)
         }
     }
