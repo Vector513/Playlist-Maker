@@ -35,5 +35,7 @@ object Dimensions {
     val PointSize = 3.dp
     val HistoryRequestHeight = 41.dp
     val RecentRequestIconSize = 16.dp
+    val PlaylistImageSmallSize = 45.dp
+    val PlaylistsItemHeight = 61.dp
 }
 

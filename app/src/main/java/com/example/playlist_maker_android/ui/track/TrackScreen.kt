@@ -125,7 +125,9 @@ fun TrackScreen(
                     },
                         modifier = Modifier.size(51.dp),
                         colors = IconButtonDefaults.iconButtonColors(
-                            containerColor = MaterialTheme.colorScheme.tertiary
+                            containerColor = MaterialTheme.colorScheme.onPrimary.copy(
+                                alpha = 0.25f
+                            )
                         )
                     ) {
                         Icon(
@@ -139,24 +141,32 @@ fun TrackScreen(
 
                     Spacer(modifier = Modifier.weight(1f))
 
-                    IconButton(onClick = {
-                        val newValue = !isFavorite
-                        isFavorite = newValue
-                        playlistsViewModel.toggleFavorite(track, newValue)
-                    },
+                    IconButton(
+                        onClick = {
+                            val newValue = !isFavorite
+                            isFavorite = newValue
+                            playlistsViewModel.toggleFavorite(track, newValue)
+                        },
                         modifier = Modifier.size(51.dp),
                         colors = IconButtonDefaults.iconButtonColors(
-                            containerColor = MaterialTheme.colorScheme.tertiary
+                            containerColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.25f)
                         )
                     ) {
                         Icon(
                             painter = painterResource(
-                                id = R.drawable.ic_add_to_favourites
+                                id = if (isFavorite)
+                                    R.drawable.ic_add_to_favourites_filled
+                                else
+                                    R.drawable.ic_add_to_favourites_outline
                             ),
                             contentDescription = null,
-                            tint = if (isFavorite) Color.Red else MaterialTheme.colorScheme.onBackground
+                            tint = if (isFavorite)
+                                Color.Red
+                            else
+                                MaterialTheme.colorScheme.onBackground
                         )
                     }
+
 
                     Spacer(modifier = Modifier.width(24.dp))
                 }

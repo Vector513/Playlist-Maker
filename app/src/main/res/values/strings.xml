@@ -25,4 +25,5 @@
     <string name="track_time_text">Длительность</string>
     <string name="favourites_panel_header_text">Избранные треки</string>
     <string name="favourites_media_empty_text">Ваша медиатека пуста</string>
+    <string name="playlists_panel_header_name">Плейлисты</string>
 </resources>
