@@ -80,4 +80,7 @@ dependencies {
 
     // Kotlin Serialization
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.gson)
+
+    implementation(libs.retrofit)
 }
