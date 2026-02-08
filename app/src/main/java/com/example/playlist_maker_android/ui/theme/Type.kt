@@ -4,7 +4,9 @@ import androidx.compose.material3.Typography
 
 val AppMaterialTypography = Typography(
     titleLarge = AppTypography.TitleLarge,
+    titleMedium = AppTypography.TitleMedium,
     labelLarge = AppTypography.LabelLarge,
+    labelMedium = AppTypography.LabelMedium,
     labelSmall = AppTypography.LabelSmall,
     bodyMedium = AppTypography.BodyMedium,
     bodyLarge = AppTypography.BodyLarge,

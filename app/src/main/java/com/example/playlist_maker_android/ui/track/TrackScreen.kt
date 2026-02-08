@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -39,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import com.example.playlist_maker_android.ui.search.components.ArrowBackButton
 import com.example.playlist_maker_android.ui.theme.Dimensions
 import com.example.playlist_maker_android.R
+import com.example.playlist_maker_android.ui.playlists.components.PlaylistListItem
 import com.example.playlist_maker_android.ui.viewmodel.PlaylistsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -204,40 +206,57 @@ fun TrackScreen(
 
                     ModalBottomSheet(
                         onDismissRequest = { showBottomSheet = false },
+                        modifier = Modifier.heightIn(505.dp),
                         sheetState = sheetState
                     ) {
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(16.dp)
                         ) {
-                            Text(
-                                text = "Выберите плейлист",
-                                style = MaterialTheme.typography.titleMedium
-                            )
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(52.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.add_to_playlist_text),
+                                    style = MaterialTheme.typography.titleMedium.copy(
+                                        color = MaterialTheme.colorScheme.onPrimary
+                                    )
+                                )
+                            }
 
-                            Spacer(modifier = Modifier.height(16.dp))
+                            Spacer(modifier = Modifier.height(6.dp))
 
                             LazyColumn {
                                 items(playlists) { playlist ->
-                                    Row(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(vertical = 8.dp)
-                                            .clickable {
-                                                playlistsViewModel.insertTrackToPlaylist(
-                                                    track,
-                                                    playlist.id
-                                                )
-                                                showBottomSheet = false
-                                            },
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Text(
-                                            text = playlist.name,
-                                            style = MaterialTheme.typography.bodyLarge
+                                    PlaylistListItem(playlist) {
+                                        playlistsViewModel.insertTrackToPlaylist(
+                                            track,
+                                            playlist.id
                                         )
+                                        showBottomSheet = false
                                     }
+
+//                                    Row(
+//                                        modifier = Modifier
+//                                            .fillMaxWidth()
+//                                            .padding(vertical = 8.dp)
+//                                            .clickable {
+//                                                playlistsViewModel.insertTrackToPlaylist(
+//                                                    track,
+//                                                    playlist.id
+//                                                )
+//                                                showBottomSheet = false
+//                                            },
+//                                        verticalAlignment = Alignment.CenterVertically
+//                                    ) {
+//                                        Text(
+//                                            text = playlist.name,
+//                                            style = MaterialTheme.typography.bodyLarge
+//                                        )
+//                                    }
                                 }
                             }
                         }

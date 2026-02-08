@@ -21,6 +21,14 @@ object AppTypography {
         letterSpacing = 0.sp
     )
 
+    val TitleMedium = TextStyle(
+        fontFamily = YSDisplay,
+        fontWeight = FontWeight.Medium,
+        fontSize = 19.sp,
+        lineHeight = 19.sp,
+        letterSpacing = 0.sp
+    )
+
     val LabelLarge = TextStyle(
         fontFamily = YSDisplay,
         fontWeight = FontWeight.Medium,
@@ -30,11 +38,20 @@ object AppTypography {
         textAlign = TextAlign.Center
     )
 
-    val LabelSmall = TextStyle(
+    val LabelMedium = TextStyle(
         fontFamily = YSDisplay,
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
         lineHeight = 14.sp,
+        letterSpacing = 0.sp,
+        textAlign = TextAlign.Center
+    )
+
+    val LabelSmall = TextStyle(
+        fontFamily = YSDisplay,
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp,
+        lineHeight = 12.sp,
         letterSpacing = 0.sp,
         textAlign = TextAlign.Center
     )
