@@ -10,7 +10,8 @@ import com.example.playlist_maker_android.R
 
 val YSDisplay = FontFamily(
     Font(R.font.ys_display_regular, FontWeight.Normal),
-    Font(R.font.ys_display_medium, FontWeight.Medium)
+    Font(R.font.ys_display_medium, FontWeight.Medium),
+    Font(R.font.ys_display_bold, FontWeight.Bold)
 )
 object AppTypography {
     val TitleLarge = TextStyle(
@@ -80,6 +81,21 @@ object AppTypography {
         letterSpacing = 0.sp
     )
 
+    val DisplayLarge = TextStyle(
+        fontFamily = YSDisplay,
+        fontWeight = FontWeight.Bold,
+        fontSize = 24.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.sp
+    )
+
+    val DisplayMedium = TextStyle(
+        fontFamily = YSDisplay,
+        fontWeight = FontWeight.Normal,
+        fontSize = 18.sp,
+        lineHeight = 18.sp,
+        letterSpacing = 0.sp
+    )
     val DisplaySmall =  TextStyle(
         fontFamily = YSDisplay,
         fontWeight = FontWeight.Normal,

@@ -11,5 +11,7 @@ val AppMaterialTypography = Typography(
     bodyMedium = AppTypography.BodyMedium,
     bodyLarge = AppTypography.BodyLarge,
     bodySmall = AppTypography.BodySmall,
+    displayLarge = AppTypography.DisplayLarge,
+    displayMedium = AppTypography.DisplayMedium,
     displaySmall = AppTypography.DisplaySmall
 )

@@ -29,4 +29,5 @@
     <string name="favourites_panel_header_text">Избранные треки</string>
     <string name="favourites_media_empty_text">Ваша медиатека пуста</string>
     <string name="playlists_panel_header_name">Плейлисты</string>
+    <string name="playlist_empty_text">Плейлист пуст</string>
 </resources>

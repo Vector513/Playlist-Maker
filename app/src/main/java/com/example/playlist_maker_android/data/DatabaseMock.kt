@@ -147,7 +147,18 @@ class DatabaseMock(val scope: CoroutineScope) {
     }
 
     fun getPlaylist(id: Long): Flow<Playlist?> = flow {
-        emit(playlists.find { it.id == id })
+        fun buildPlaylist(): Playlist? {
+            val playlist = playlists.find { it.id == id } ?: return null
+            val playlistTracks = tracks.filter { track ->
+                track.playlistId == playlist.id
+            }
+            return playlist.copy(tracks = playlistTracks)
+        }
+
+        emit(buildPlaylist())
+        _playlistsUpdates.collect {
+            emit(buildPlaylist())
+        }
     }
 
     fun addNewPlaylist(name: String, description: String) {

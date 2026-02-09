@@ -1,18 +1,25 @@
 package com.example.playlist_maker_android.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.playlist_maker_android.ui.main.MainScreen
 import com.example.playlist_maker_android.ui.favourites.FavouritesScreen
 import com.example.playlist_maker_android.ui.playlists.PlaylistsScreen
 import com.example.playlist_maker_android.ui.playlists.NewPlaylistScreen
+import com.example.playlist_maker_android.ui.playlists.PlaylistScreen
 import com.example.playlist_maker_android.ui.search.SearchScreen
 import com.example.playlist_maker_android.ui.settings.SettingsScreen
 import com.example.playlist_maker_android.ui.track.TrackScreen
 import com.example.playlist_maker_android.ui.viewmodel.PlaylistsViewModel
+import com.example.playlist_maker_android.ui.viewmodel.PlaylistViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.playlist_maker_android.domain.Track
 
@@ -69,10 +76,45 @@ fun PlaylistHost(navController: NavHostController) {
             PlaylistsScreen(
                 playlistsViewModel = playlistsViewModel,
                 addNewPlaylist = { navigateToNewPlayList(navController) },
-                navigateBack = { navController.popBackStack() }
-            ) { index ->
-                navigateToPlayList(navController, index)
+                navigateBack = { navController.popBackStack() },
+                navigateToPlaylist = { index ->
+                    navigateToPlayList(navController, index)
+                }
+            )
+        }
+        
+        composable(
+            route = "${Screen.PLAYLIST.route}/{index}",
+            arguments = listOf(
+                navArgument("index") {
+                    type = NavType.IntType
+                }
+            )
+        ) { backStackEntry ->
+            val index = backStackEntry.arguments?.getInt("index") ?: 0
+            val playlists by playlistsViewModel.playlists.collectAsState(emptyList())
+            
+            // Получаем playlistId из индекса
+            val playlistId = if (index < playlists.size) {
+                playlists[index].id
+            } else {
+                // Fallback: если индекс не найден, используем index + 1 как id
+                (index + 1).toLong()
             }
+            
+            val playlistViewModel: PlaylistViewModel = viewModel(
+                factory = PlaylistViewModel.getViewModelFactory(playlistId)
+            )
+            
+            PlaylistScreen(
+                modifier = Modifier,
+                playlistViewModel = playlistViewModel,
+                index = index,
+                onClick = { trackIndex -> navigateToTrack(navController, trackIndex.toLong()) },
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
         }
 
         composable(Screen.NEWPLAYLIST.route) {
