@@ -1,6 +1,7 @@
 package com.example.playlist_maker_android.data
 
 import com.example.playlist_maker_android.data.dto.TracksSearchResponse
+import com.example.playlist_maker_android.domain.Track
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -12,5 +13,10 @@ interface ITunesApiService {
         @Query("media") media: String = "music",
         @Query("entity") entity: String = "song",
         @Query("limit") limit: Int = 50
+    ): TracksSearchResponse
+
+    @GET("lookup")
+    suspend fun getTrackById(
+        @Query("id") id: Long
     ): TracksSearchResponse
 }

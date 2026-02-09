@@ -20,7 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.playlist_maker_android.R
-import com.example.playlist_maker_android.data.Playlist
+import com.example.playlist_maker_android.domain.Playlist
 import com.example.playlist_maker_android.ui.theme.Dimensions
 
 @Composable

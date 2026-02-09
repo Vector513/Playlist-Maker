@@ -30,7 +30,7 @@ import com.example.playlist_maker_android.ui.search.components.ArrowBackButton
 import com.example.playlist_maker_android.ui.theme.Dimensions
 import com.example.playlist_maker_android.ui.viewmodel.PlaylistsViewModel
 import com.example.playlist_maker_android.ui.search.components.TrackListItem
-import com.example.playlist_maker_android.data.network.Track
+import com.example.playlist_maker_android.domain.Track
 
 @Composable
 fun FavouritesScreen(

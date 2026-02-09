@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.playlist_maker_android.ui.viewmodel.SearchState
-import com.example.playlist_maker_android.data.network.Track
+import com.example.playlist_maker_android.domain.Track
 
 @Composable
 fun SearchContent(

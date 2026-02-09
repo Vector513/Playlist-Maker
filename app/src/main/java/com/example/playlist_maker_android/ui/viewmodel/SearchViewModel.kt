@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.playlist_maker_android.creator.Creator
-import com.example.playlist_maker_android.data.SearchHistoryRepositoryImpl
-import com.example.playlist_maker_android.data.Word
 import com.example.playlist_maker_android.domain.TracksRepository
+import com.example.playlist_maker_android.domain.Word
+import com.example.playlist_maker_android.domain.SearchHistoryRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,15 +20,14 @@ import java.io.IOException
 
 @OptIn(FlowPreview::class)
 class SearchViewModel(
-    private val tracksRepository: TracksRepository
+    private val tracksRepository: TracksRepository,
+    private val searchHistoryRepository: SearchHistoryRepository
 ) : ViewModel() {
     private val _searchScreenState = MutableStateFlow<SearchState>(SearchState.Initial)
     val searchScreenState  = _searchScreenState.asStateFlow()
 
     private val _textFieldState = MutableStateFlow<TextFieldState>(TextFieldState(""))
     val textFieldState = _textFieldState.asStateFlow()
-
-    private val searchHistoryRepository = SearchHistoryRepositoryImpl(scope = viewModelScope)
 
     init {
         viewModelScope.launch {
@@ -51,7 +50,9 @@ class SearchViewModel(
                 val list = tracksRepository.searchTracks(expression = request)
                 _searchScreenState.update { SearchState.Success(foundList = list) }
             } catch (e: IOException) {
-                _searchScreenState.update { SearchState.Fail(e.message.toString()) }
+                _searchScreenState.update { SearchState.Fail("Проблемы с сетью: ${e.message ?: "Неизвестная ошибка"}") }
+            } catch (e: Exception) {
+                _searchScreenState.update { SearchState.Fail("Не удалось обработать ответ сервера: ${e.message ?: "Неизвестная ошибка"}") }
             }
         }
     }
@@ -68,7 +69,10 @@ class SearchViewModel(
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return SearchViewModel(Creator.getTracksRepository()) as T
+                    return SearchViewModel(
+                    Creator.getTracksRepository(),
+                    Creator.getSearchHistoryRepository()
+                ) as T
                 }
             }
     }

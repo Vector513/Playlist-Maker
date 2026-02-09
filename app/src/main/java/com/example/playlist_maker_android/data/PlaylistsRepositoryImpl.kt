@@ -3,10 +3,11 @@ package com.example.playlist_maker_android.data
 import com.example.playlist_maker_android.domain.PlaylistsRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import com.example.playlist_maker_android.domain.Playlist
 
 class PlaylistsRepositoryImpl(
     private val scope: CoroutineScope,
-    private val database: DatabaseMock = DatabaseMock(scope = scope)
+    private val database: DatabaseMock
 ) : PlaylistsRepository {
     
 

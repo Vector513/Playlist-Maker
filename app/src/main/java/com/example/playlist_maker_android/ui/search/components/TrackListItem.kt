@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.playlist_maker_android.data.network.Track
+import com.example.playlist_maker_android.domain.Track
 import com.example.playlist_maker_android.ui.theme.Dimensions
 
 @Composable

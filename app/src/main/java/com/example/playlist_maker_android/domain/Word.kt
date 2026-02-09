@@ -1,4 +1,4 @@
-package com.example.playlist_maker_android.data
+package com.example.playlist_maker_android.domain
 
 data class Word(
     val word: String,

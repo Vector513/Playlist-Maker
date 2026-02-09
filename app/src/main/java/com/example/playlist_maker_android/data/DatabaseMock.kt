@@ -1,6 +1,8 @@
 package com.example.playlist_maker_android.data
 
-import com.example.playlist_maker_android.data.network.Track
+import com.example.playlist_maker_android.domain.Playlist
+import com.example.playlist_maker_android.domain.Track
+import com.example.playlist_maker_android.domain.Word
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

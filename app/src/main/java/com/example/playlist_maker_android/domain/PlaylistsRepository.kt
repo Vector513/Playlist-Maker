@@ -1,6 +1,5 @@
 package com.example.playlist_maker_android.domain
 
-import com.example.playlist_maker_android.data.Playlist
 import kotlinx.coroutines.flow.Flow
 
 interface PlaylistsRepository {

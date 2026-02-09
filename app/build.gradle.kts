@@ -61,6 +61,8 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.compose.foundation.layout)
+    implementation(libs.coil.compose)
+
 
     // Testing
     testImplementation(libs.junit)
@@ -83,4 +85,6 @@ dependencies {
     implementation(libs.gson)
 
     implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+
 }

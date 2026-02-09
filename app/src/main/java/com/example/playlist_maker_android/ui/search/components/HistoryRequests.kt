@@ -25,7 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.playlist_maker_android.data.Word
+import com.example.playlist_maker_android.domain.Word
 import com.example.playlist_maker_android.R
 import com.example.playlist_maker_android.ui.theme.Dimensions
 

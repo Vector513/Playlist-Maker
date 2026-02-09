@@ -1,6 +1,4 @@
-package com.example.playlist_maker_android.data
-
-import com.example.playlist_maker_android.data.network.Track
+package com.example.playlist_maker_android.domain
 
 data class Playlist(
     val id: Long = 0,

@@ -12,9 +12,9 @@ import com.example.playlist_maker_android.ui.playlists.NewPlaylistScreen
 import com.example.playlist_maker_android.ui.search.SearchScreen
 import com.example.playlist_maker_android.ui.settings.SettingsScreen
 import com.example.playlist_maker_android.ui.track.TrackScreen
-import com.example.playlist_maker_android.data.network.Track
 import com.example.playlist_maker_android.ui.viewmodel.PlaylistsViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.playlist_maker_android.domain.Track
 
 enum class Screen(val route: String) {
     MAIN("main"),
@@ -57,7 +57,7 @@ fun PlaylistHost(navController: NavHostController) {
         composable(Screen.SEARCH.route) {
             SearchScreen(
                 onTrackClick = { track ->
-                    navigateToTrack(navController, track)
+                    navigateToTrack(navController, track.id)
                 },
                 onBack = {
                     navController.popBackStack()
@@ -91,7 +91,7 @@ fun PlaylistHost(navController: NavHostController) {
                     navController.popBackStack()
                 },
                 onTrackClick = { track ->
-                    navigateToTrack(navController, track)
+                    navigateToTrack(navController, track.id)
                 }
             )
         }
@@ -142,8 +142,8 @@ private fun navigateToNewPlayList(navController: NavController) {
     navController.navigate(Screen.NEWPLAYLIST.route)
 }
 
-private fun navigateToTrack(navController: NavController, track: Track) {
-    navController.navigate("${Screen.TRACK.route}/${track.id}")
+private fun navigateToTrack(navController: NavController, trackId: Long) {
+    navController.navigate("${Screen.TRACK.route}/$trackId")
 }
 
 private fun navigateToSettings(navController: NavController) {

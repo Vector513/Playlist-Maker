@@ -1,6 +1,6 @@
 package com.example.playlist_maker_android.ui.viewmodel
 
-import com.example.playlist_maker_android.data.network.Track
+import com.example.playlist_maker_android.domain.Track
 
 sealed class SearchState {
     object Initial: SearchState()

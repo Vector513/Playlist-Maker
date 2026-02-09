@@ -18,7 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.playlist_maker_android.R
-import com.example.playlist_maker_android.data.network.Track
+import com.example.playlist_maker_android.domain.Track
 import com.example.playlist_maker_android.ui.search.components.TrackListItem
 import com.example.playlist_maker_android.ui.theme.Dimensions
 
