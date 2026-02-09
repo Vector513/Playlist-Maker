@@ -13,7 +13,8 @@ import com.example.playlist_maker_android.domain.Track
 fun SearchContent(
     screenState: SearchState,
     text: CharSequence,
-    onTrackClick: (Track) -> Unit
+    onTrackClick: (Track) -> Unit,
+    onRetry: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -26,6 +27,7 @@ fun SearchContent(
             is SearchState.Searching -> SearchLoadingState()
             is SearchState.Success -> SearchResultsState(screenState.foundList, onTrackClick)
             is SearchState.Fail -> SearchErrorState(screenState.error)
+            is SearchState.ServerError -> SearchServerErrorState(onRetry)
         }
     }
 }

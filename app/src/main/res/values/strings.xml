@@ -18,6 +18,8 @@
     <string name="share_app_message">Скачай это приложение: https://play.google.com/store/apps/details?id=com.example.app</string>
     <string name="user_agreement_url">https://yandex.ru/legal/practicum_offer/ru/?ysclid=mkihtpuwcf747893873</string>
     <string name="music_not_found_text">Ничего не нашлось</string>
+    <string name="server_error_text">Ошибка сервера</string>
+    <string name="retry_button_text">Обновить</string>
     <string name="add_to_playlist_text">Добавить в плейлист</string>
     <string name="new_playlist_title">Новый плейлист</string>
     <string name="new_playlist_name_placeholder">Название*</string>

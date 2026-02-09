@@ -7,6 +7,7 @@ import com.example.playlist_maker_android.data.dto.TracksSearchResponse
 import com.example.playlist_maker_android.data.mapper.TrackMapper
 import com.example.playlist_maker_android.domain.BaseResponse
 import com.example.playlist_maker_android.domain.NetworkClient
+import com.example.playlist_maker_android.domain.ServerErrorException
 import com.example.playlist_maker_android.domain.Track
 import com.example.playlist_maker_android.domain.TracksRepository
 import kotlinx.coroutines.CoroutineScope
@@ -39,8 +40,15 @@ class TracksRepositoryImpl(
                 }
             }
             is BaseResponse -> {
-                Log.e("network", "searchTracks error: ${response.errorMessage}")
-                emptyList()
+                // Если resultCode указывает на HTTP ошибку сервера (4xx, 5xx)
+                if (response.resultCode >= 400 && response.resultCode < 600) {
+                    Log.e("network", "searchTracks server error: ${response.errorMessage}")
+                    throw ServerErrorException(response.errorMessage ?: "Ошибка сервера")
+                } else {
+                    // Сетевые ошибки или другие ошибки обрабатываются как обычные ошибки
+                    Log.e("network", "searchTracks error: ${response.errorMessage}")
+                    emptyList()
+                }
             }
         }
     }

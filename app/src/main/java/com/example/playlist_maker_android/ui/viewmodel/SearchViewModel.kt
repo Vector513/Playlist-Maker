@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.playlist_maker_android.creator.Creator
+import com.example.playlist_maker_android.domain.ServerErrorException
 import com.example.playlist_maker_android.domain.TracksRepository
 import com.example.playlist_maker_android.domain.Word
 import com.example.playlist_maker_android.domain.SearchHistoryRepository
@@ -49,11 +50,20 @@ class SearchViewModel(
                 searchHistoryRepository.addToHistory(Word(word = request))
                 val list = tracksRepository.searchTracks(expression = request)
                 _searchScreenState.update { SearchState.Success(foundList = list) }
+            } catch (e: ServerErrorException) {
+                _searchScreenState.update { SearchState.ServerError }
             } catch (e: IOException) {
                 _searchScreenState.update { SearchState.Fail("Проблемы с сетью: ${e.message ?: "Неизвестная ошибка"}") }
             } catch (e: Exception) {
                 _searchScreenState.update { SearchState.Fail("Не удалось обработать ответ сервера: ${e.message ?: "Неизвестная ошибка"}") }
             }
+        }
+    }
+    
+    fun retrySearch() {
+        val currentText = _textFieldState.value.text.toString()
+        if (currentText.isNotEmpty()) {
+            search(currentText)
         }
     }
 
