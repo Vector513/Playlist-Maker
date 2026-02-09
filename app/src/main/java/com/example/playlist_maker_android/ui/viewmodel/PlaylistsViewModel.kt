@@ -66,10 +66,6 @@ class PlaylistsViewModel() : ViewModel() {
         playlistsRepository.deletePlaylistById(id)
     }
 
-    suspend fun isExist(track: Track): Track? {
-        return tracksRepository.getTrackByNameAndArtist(track = track).firstOrNull()
-    }
-
     companion object {
         fun getViewModelFactory(): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
