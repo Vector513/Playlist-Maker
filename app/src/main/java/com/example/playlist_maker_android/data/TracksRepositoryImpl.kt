@@ -5,7 +5,7 @@ import com.example.playlist_maker_android.data.database.AppDatabase
 import com.example.playlist_maker_android.data.database.entity.toTrack
 import com.example.playlist_maker_android.data.dto.TracksSearchRequest
 import com.example.playlist_maker_android.data.dto.TracksSearchResponse
-import com.example.playlist_maker_android.data.mapper.TrackMapper
+import com.example.playlist_maker_android.data.dto.toTrack
 import com.example.playlist_maker_android.domain.BaseResponse
 import com.example.playlist_maker_android.domain.NetworkClient
 import com.example.playlist_maker_android.domain.ServerErrorException
@@ -31,7 +31,7 @@ class TracksRepositoryImpl(
                     response.results.mapNotNull { dto ->
                         try {
                             Log.i("networkTrackId", "$dto")
-                            TrackMapper.fromDto(dto)
+                            dto.toTrack()
                         } catch (e: Exception) {
                             Log.e("network", "Error mapping track: ${e.message}", e)
                             null
@@ -71,7 +71,7 @@ class TracksRepositoryImpl(
                 when (response) {
                     is TracksSearchResponse -> {
                         if (response.results.isNotEmpty()) {
-                            TrackMapper.fromDto(response.results[0])
+                            response.results[0].toTrack()
                         } else {
                             Log.w("network", "getTrackById: empty results for id=$id")
                             null
