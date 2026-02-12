@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlist_maker_android.creator.Creator
 import com.example.playlist_maker_android.domain.ServerErrorException
 import com.example.playlist_maker_android.domain.TracksRepository
-import com.example.playlist_maker_android.domain.Word
 import com.example.playlist_maker_android.domain.SearchHistoryRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -47,7 +46,7 @@ class SearchViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 _searchScreenState.update { SearchState.Searching }
-                searchHistoryRepository.addToHistory(Word(word = request))
+                searchHistoryRepository.addToHistory(request)
                 val list = tracksRepository.searchTracks(expression = request)
                 _searchScreenState.update { SearchState.Success(foundList = list) }
             } catch (e: ServerErrorException) {

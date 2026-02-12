@@ -18,7 +18,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.playlist_maker_android.domain.Word
 import com.example.playlist_maker_android.ui.search.components.SearchPanelHeader
 import com.example.playlist_maker_android.ui.viewmodel.SearchViewModel
 import com.example.playlist_maker_android.domain.Track
@@ -36,7 +35,7 @@ internal fun SearchScreen(
     val screenState by viewModel.searchScreenState.collectAsState()
     val textState by viewModel.textFieldState.collectAsState()
 
-    var historyList by remember { mutableStateOf<List<Word>>(emptyList()) }
+    var historyList by remember { mutableStateOf<List<String>>(emptyList()) }
     val focusManager = LocalFocusManager.current
 
     Scaffold(
@@ -70,7 +69,7 @@ internal fun SearchScreen(
                 onSearchClick = { viewModel.search(textState.text.toString()) },
                 onClearClick = { viewModel.clearTextField() },
                 onHistoryClick = { word ->
-                    textState.setTextAndSelectAll(word.word)
+                    textState.setTextAndSelectAll(word)
                     viewModel.search(textState.text.toString())
                 }
             )

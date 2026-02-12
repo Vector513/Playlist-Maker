@@ -5,10 +5,8 @@ import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
-import com.example.playlist_maker_android.data.DatabaseMock
 import com.example.playlist_maker_android.data.ITunesApiService
 import com.example.playlist_maker_android.data.PlaylistsRepositoryImpl
 import com.example.playlist_maker_android.data.SearchHistoryRepositoryImpl
@@ -29,10 +27,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 object Creator {
     private val appScope: CoroutineScope by lazy {
         CoroutineScope(SupervisorJob() + Dispatchers.IO)
-    }
-
-    private val databaseMock: DatabaseMock by lazy {
-        DatabaseMock(scope = appScope)
     }
 
     private lateinit var dataStore: DataStore<Preferences>

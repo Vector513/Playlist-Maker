@@ -44,16 +44,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.playlist_maker_android.R
-import com.example.playlist_maker_android.domain.Word
 import com.example.playlist_maker_android.ui.theme.Dimensions
 
 @Composable
 fun SearchBar(
     textState: TextFieldState,
-    historyList: List<Word>,
+    historyList: List<String>,
     onSearchClick: () -> Unit,
     onClearClick: () -> Unit,
-    onHistoryClick: (Word) -> Unit
+    onHistoryClick: (String) -> Unit
 ) {
     var isFocused by remember { mutableStateOf(false) }
     val placeholder = stringResource(R.string.search_bar_placeholder)
@@ -170,7 +169,7 @@ fun SearchBar(
             HistoryRequests(
                 historyList = historyList,
                 onClick = { word ->
-                    textState.setTextAndSelectAll(word.word)
+                    textState.setTextAndSelectAll(word)
                     onHistoryClick(word)
                 }
             )

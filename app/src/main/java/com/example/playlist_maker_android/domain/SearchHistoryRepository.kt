@@ -2,7 +2,7 @@ package com.example.playlist_maker_android.domain
 
 interface SearchHistoryRepository {
 
-    suspend fun getHistoryRequests(): List<Word>
+    suspend fun getHistoryRequests(): List<String>
 
-    suspend fun addToHistory(word: Word)
+    suspend fun addToHistory(entry: String)
 }
