@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -41,6 +42,17 @@ class SearchHistoryPreferences(
                     this[preferencesKey] = trimmed.joinToString(SEPARATOR)
                 }
             }
+        }
+    }
+
+    suspend fun getEntries(): List<String> {
+        val preferences = dataStore.data.first()
+        val historyString = preferences[preferencesKey].orEmpty()
+
+        return if (historyString.isNotEmpty()) {
+            historyString.split(SEPARATOR)
+        } else {
+            emptyList()
         }
     }
 

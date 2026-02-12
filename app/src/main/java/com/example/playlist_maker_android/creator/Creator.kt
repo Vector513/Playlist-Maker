@@ -2,6 +2,11 @@ package com.example.playlist_maker_android.creator
 
 import android.content.Context
 import android.util.Log
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
+import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
 import com.example.playlist_maker_android.data.DatabaseMock
 import com.example.playlist_maker_android.data.ITunesApiService
@@ -10,6 +15,7 @@ import com.example.playlist_maker_android.data.SearchHistoryRepositoryImpl
 import com.example.playlist_maker_android.data.network.RetrofitNetworkClient
 import com.example.playlist_maker_android.data.TracksRepositoryImpl
 import com.example.playlist_maker_android.data.database.AppDatabase
+import com.example.playlist_maker_android.data.preferences.SearchHistoryPreferences
 import com.example.playlist_maker_android.domain.PlaylistsRepository
 import com.example.playlist_maker_android.domain.SearchHistoryRepository
 import com.example.playlist_maker_android.domain.TracksRepository
@@ -29,6 +35,8 @@ object Creator {
         DatabaseMock(scope = appScope)
     }
 
+    private lateinit var dataStore: DataStore<Preferences>
+
     private lateinit var database: AppDatabase
 
     fun init(context: Context) {
@@ -39,6 +47,12 @@ object Creator {
                 "playlists_maker"
             ).build()
         }
+
+        dataStore = PreferenceDataStoreFactory.create(
+            produceFile = {
+                context.preferencesDataStoreFile("search_history_preferences")
+            }
+        )
     }
 
     private fun ensureDatabaseInitialized() {
@@ -72,7 +86,12 @@ object Creator {
     }
 
     private val searchHistoryRepositoryInstance: SearchHistoryRepository by lazy {
-        SearchHistoryRepositoryImpl(database = databaseMock)
+        SearchHistoryRepositoryImpl(
+            SearchHistoryPreferences(
+                dataStore,
+                appScope
+            )
+        )
     }
 
     fun getTracksRepository(): TracksRepository = tracksRepositoryInstance
