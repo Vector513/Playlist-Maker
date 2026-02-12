@@ -125,7 +125,7 @@ fun PlaylistScreen(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = playlist?.name ?: "",
+                    text = playlist?.description ?: "",
                     modifier = Modifier.padding(start = 16.dp),
                     style = MaterialTheme.typography.displayMedium.copy(
                         color = MaterialTheme.colorScheme.onPrimary,

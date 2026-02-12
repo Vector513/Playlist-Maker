@@ -47,24 +47,17 @@ import com.example.playlist_maker_android.ui.search.components.ArrowBackButton
 import com.example.playlist_maker_android.ui.theme.Dimensions
 import com.example.playlist_maker_android.R
 import com.example.playlist_maker_android.ui.playlists.components.PlaylistListItem
-import com.example.playlist_maker_android.ui.viewmodel.PlaylistsViewModel
+import com.example.playlist_maker_android.ui.viewmodel.TrackViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TrackScreen(
-    trackId: Long,
-    playlistsViewModel: PlaylistsViewModel,
+    viewModel: TrackViewModel,
     onBack: () -> Unit
 ) {
-    Log.i("trackId", "$trackId")
-    LaunchedEffect(trackId) {
-        playlistsViewModel.loadTrack(trackId)
-    }
+    val trackState by viewModel.currentTrack.collectAsState()
+    val playlists by viewModel.playlists.collectAsState(emptyList())
 
-    val trackState by playlistsViewModel.currentTrack.collectAsState()
-    val playlists by playlistsViewModel.playlists.collectAsState(emptyList())
-
-    var isFavorite by remember(trackId) { mutableStateOf(false) }
     var showBottomSheet by remember { mutableStateOf(false) }
 
     Scaffold { innerPadding ->
@@ -92,10 +85,6 @@ fun TrackScreen(
 
             if (trackState != null) {
                 val track = trackState!!
-
-                LaunchedEffect(track.id, track.favorite) {
-                    isFavorite = track.favorite
-                }
 
                 AsyncImage(
                     model = trackState?.image?.replace("100x100", "312x312"),
@@ -160,9 +149,7 @@ fun TrackScreen(
 
                     IconButton(
                         onClick = {
-                            val newValue = !isFavorite
-                            isFavorite = newValue
-                            playlistsViewModel.toggleFavorite(track, newValue)
+                            viewModel.toggleFavorite(!track.favorite)
                         },
                         modifier = Modifier.size(51.dp),
                         colors = IconButtonDefaults.iconButtonColors(
@@ -171,13 +158,13 @@ fun TrackScreen(
                     ) {
                         Icon(
                             painter = painterResource(
-                                id = if (isFavorite)
+                                id = if (track.favorite)
                                     R.drawable.ic_add_to_favourites_filled
                                 else
                                     R.drawable.ic_add_to_favourites_outline
                             ),
                             contentDescription = null,
-                            tint = if (isFavorite)
+                            tint = if (track.favorite)
                                 Color.Red
                             else
                                 MaterialTheme.colorScheme.onBackground
@@ -247,10 +234,7 @@ fun TrackScreen(
                             LazyColumn {
                                 items(playlists) { playlist ->
                                     PlaylistListItem(playlist) {
-                                        playlistsViewModel.insertTrackToPlaylist(
-                                            track,
-                                            playlist.id
-                                        )
+                                        viewModel.insertTrackToPlaylist(playlist.id)
                                         showBottomSheet = false
                                     }
 

@@ -28,17 +28,17 @@ import androidx.compose.ui.unit.dp
 import com.example.playlist_maker_android.R
 import com.example.playlist_maker_android.ui.search.components.ArrowBackButton
 import com.example.playlist_maker_android.ui.theme.Dimensions
-import com.example.playlist_maker_android.ui.viewmodel.PlaylistsViewModel
+import com.example.playlist_maker_android.ui.viewmodel.FavouritesViewModel
 import com.example.playlist_maker_android.ui.search.components.TrackListItem
 import com.example.playlist_maker_android.domain.Track
 
 @Composable
 fun FavouritesScreen(
-    playlistsViewModel: PlaylistsViewModel,
+    favouritesViewModel: FavouritesViewModel,
     onBack: () -> Unit,
     onTrackClick: (Track) -> Unit
 ) {
-    val favoriteTracks by playlistsViewModel.favoriteList.collectAsState(emptyList())
+    val favoriteTracks by favouritesViewModel.favoriteList.collectAsState(emptyList())
 
     Scaffold { innerPadding ->
         Column(

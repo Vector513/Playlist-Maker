@@ -1,7 +1,8 @@
-package com.example.playlist_maker_android.data.network
+package com.example.playlist_maker_android.data
 
 import android.util.Log
-import com.example.playlist_maker_android.data.DatabaseMock
+import com.example.playlist_maker_android.data.database.AppDatabase
+import com.example.playlist_maker_android.data.database.entity.toTrack
 import com.example.playlist_maker_android.data.dto.TracksSearchRequest
 import com.example.playlist_maker_android.data.dto.TracksSearchResponse
 import com.example.playlist_maker_android.data.mapper.TrackMapper
@@ -10,14 +11,16 @@ import com.example.playlist_maker_android.domain.NetworkClient
 import com.example.playlist_maker_android.domain.ServerErrorException
 import com.example.playlist_maker_android.domain.Track
 import com.example.playlist_maker_android.domain.TracksRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import com.example.playlist_maker_android.domain.toEntity
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class TracksRepositoryImpl(
-    private val database: DatabaseMock,
-    private val networkClient: NetworkClient
+    private val networkClient: NetworkClient,
+    database: AppDatabase
 ) : TracksRepository {
+
+    private val dao = database.TracksDao()
 
     override suspend fun searchTracks(expression: String): List<Track> {
         val response = networkClient.search(TracksSearchRequest(expression))
@@ -53,42 +56,57 @@ class TracksRepositoryImpl(
         }
     }
 
-    override suspend fun getTrackById(id: Long): Track? {
-        val response = networkClient.getTrackById(id)
-        Log.i("network", "getTrackById response code: ${response.resultCode}")
-        return when (response) {
-            is TracksSearchResponse -> {
-                if (response.results.isNotEmpty()) {
-                    TrackMapper.fromDto(response.results[0])
-                } else {
-                    Log.w("network", "getTrackById: empty results for id=$id")
-                    null
-                }
+    override fun getTrackByNameAndArtist(track: Track): Flow<Track?> {
+        return dao.getTrackByNameAndArtist(track.trackName, track.artistName).map { it?.toTrack() }
+    }
+
+    override suspend fun getTrackById(id: Long): Flow<Track?> {
+        return dao.getTrackById(id).map {
+            if (it != null) {
+                it.toTrack()
             }
-            is BaseResponse -> {
-                Log.e("network", "getTrackById error: ${response.errorMessage}")
-                null
+            else {
+                val response = networkClient.getTrackById(id)
+                Log.i("network", "getTrackById response code: ${response.resultCode}")
+                when (response) {
+                    is TracksSearchResponse -> {
+                        if (response.results.isNotEmpty()) {
+                            TrackMapper.fromDto(response.results[0])
+                        } else {
+                            Log.w("network", "getTrackById: empty results for id=$id")
+                            null
+                        }
+                    }
+                    is BaseResponse -> {
+                        Log.e("network", "getTrackById error: ${response.errorMessage}")
+                        null
+                    }
+                }
             }
         }
     }
 
-    override suspend fun insertTrackToPlaylist(track: Track, playlistId: Long) {
-        database.insertTrack(track.copy(playlistId = playlistId))
+    override fun getFavoriteTracks(): Flow<List<Track>> {
+        return dao.getTracksForFavorites().map { list -> list.map { it.toTrack() } }
     }
 
-    override suspend fun deleteTrackFromPlaylist(track: Track) {
-        database.insertTrack(track.copy(playlistId = 0))
+    override fun getTracksForPlaylist(playlistId: Long): Flow<List<Track>> {
+        return dao.getTracksForPlaylist(playlistId).map { list -> list.map { it.toTrack() } }
+    }
+
+    override suspend fun insertTrackToPlaylist(track: Track, playlistId: Long) {
+        dao.insertOrUpdateTrack(track.toEntity(playlistId = playlistId))
     }
 
     override suspend fun updateTrackFavoriteStatus(track: Track, isFavorite: Boolean) {
-        database.insertTrack(track.copy(favorite = isFavorite))
+        dao.insertOrUpdateTrack(track.toEntity(favorite = isFavorite))
+    }
+
+    override suspend fun deleteTrackFromPlaylist(track: Track) {
+        dao.updateTrack(track.toEntity(playlistId = 0))
     }
 
     override suspend fun deleteTracksByPlaylistId(playlistId: Long) {
-        database.deleteTracksByPlaylistId(playlistId)
-    }
-
-    override fun getFavoriteTracks(): Flow<List<Track>> {
-        return database.getFavoriteTracks()
+        dao.deleteTracksByPlaylistId(playlistId)
     }
 }

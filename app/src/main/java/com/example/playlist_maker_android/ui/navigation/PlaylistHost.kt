@@ -20,6 +20,8 @@ import com.example.playlist_maker_android.ui.settings.SettingsScreen
 import com.example.playlist_maker_android.ui.track.TrackScreen
 import com.example.playlist_maker_android.ui.viewmodel.PlaylistsViewModel
 import com.example.playlist_maker_android.ui.viewmodel.PlaylistViewModel
+import com.example.playlist_maker_android.ui.viewmodel.TrackViewModel
+import com.example.playlist_maker_android.ui.viewmodel.FavouritesViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.playlist_maker_android.domain.Track
 
@@ -127,8 +129,11 @@ fun PlaylistHost(navController: NavHostController) {
         }
 
         composable(Screen.FAVOURITES.route) {
+            val favouritesViewModel: FavouritesViewModel = viewModel(
+                factory = FavouritesViewModel.getViewModelFactory()
+            )
             FavouritesScreen(
-                playlistsViewModel = playlistsViewModel,
+                favouritesViewModel = favouritesViewModel,
                 onBack = {
                     navController.popBackStack()
                 },
@@ -142,9 +147,11 @@ fun PlaylistHost(navController: NavHostController) {
             val trackId = backStackEntry.arguments?.getString("trackId")?.toLongOrNull()
 
             if (trackId != null) {
+                val trackViewModel: TrackViewModel = viewModel(
+                    factory = TrackViewModel.getViewModelFactory(trackId)
+                )
                 TrackScreen(
-                    trackId = trackId,
-                    playlistsViewModel = playlistsViewModel,
+                    viewModel = trackViewModel,
                     onBack = {
                         val popped = navController.popBackStack()
                         if (!popped) {
@@ -187,6 +194,7 @@ private fun navigateToNewPlayList(navController: NavController) {
 private fun navigateToTrack(navController: NavController, trackId: Long) {
     navController.navigate("${Screen.TRACK.route}/$trackId")
 }
+
 
 private fun navigateToSettings(navController: NavController) {
     navController.navigate(Screen.SETTINGS.route)

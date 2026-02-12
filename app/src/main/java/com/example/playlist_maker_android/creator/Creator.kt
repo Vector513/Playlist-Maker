@@ -1,11 +1,15 @@
 package com.example.playlist_maker_android.creator
 
+import android.content.Context
+import android.util.Log
+import androidx.room.Room
 import com.example.playlist_maker_android.data.DatabaseMock
 import com.example.playlist_maker_android.data.ITunesApiService
 import com.example.playlist_maker_android.data.PlaylistsRepositoryImpl
 import com.example.playlist_maker_android.data.SearchHistoryRepositoryImpl
 import com.example.playlist_maker_android.data.network.RetrofitNetworkClient
-import com.example.playlist_maker_android.data.network.TracksRepositoryImpl
+import com.example.playlist_maker_android.data.TracksRepositoryImpl
+import com.example.playlist_maker_android.data.database.AppDatabase
 import com.example.playlist_maker_android.domain.PlaylistsRepository
 import com.example.playlist_maker_android.domain.SearchHistoryRepository
 import com.example.playlist_maker_android.domain.TracksRepository
@@ -15,13 +19,34 @@ import kotlinx.coroutines.SupervisorJob
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+
 object Creator {
     private val appScope: CoroutineScope by lazy {
         CoroutineScope(SupervisorJob() + Dispatchers.IO)
     }
 
-    private val database: DatabaseMock by lazy {
+    private val databaseMock: DatabaseMock by lazy {
         DatabaseMock(scope = appScope)
+    }
+
+    private lateinit var database: AppDatabase
+
+    fun init(context: Context) {
+        if (!::database.isInitialized) {
+            database = Room.databaseBuilder(
+                context.applicationContext,
+                AppDatabase::class.java,
+                "playlists_maker"
+            ).build()
+        }
+    }
+
+    private fun ensureDatabaseInitialized() {
+        Log.i("init", "Checking for existing")
+        if (!::database.isInitialized) {
+            Log.i("init", "doesnot exist!!!")
+            throw IllegalStateException("Creator.init(context) must be called before using repositories!")
+        }
     }
 
     private val networkClient: RetrofitNetworkClient by lazy {
@@ -34,6 +59,7 @@ object Creator {
     }
 
     private val tracksRepositoryInstance: TracksRepository by lazy {
+        ensureDatabaseInitialized()
         TracksRepositoryImpl(
             database = database,
             networkClient = networkClient
@@ -41,11 +67,12 @@ object Creator {
     }
 
     private val playlistsRepositoryInstance: PlaylistsRepository by lazy {
-        PlaylistsRepositoryImpl(scope = appScope, database = database)
+        ensureDatabaseInitialized()
+        PlaylistsRepositoryImpl(database = database)
     }
 
     private val searchHistoryRepositoryInstance: SearchHistoryRepository by lazy {
-        SearchHistoryRepositoryImpl(database = database)
+        SearchHistoryRepositoryImpl(database = databaseMock)
     }
 
     fun getTracksRepository(): TracksRepository = tracksRepositoryInstance
