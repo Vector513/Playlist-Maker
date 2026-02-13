@@ -1,6 +1,7 @@
 package com.example.playlist_maker_android.data
 
 import android.util.Log
+import androidx.room.Transaction
 import com.example.playlist_maker_android.data.database.AppDatabase
 import com.example.playlist_maker_android.data.database.entity.toTrack
 import com.example.playlist_maker_android.data.dto.TracksSearchRequest
@@ -90,23 +91,31 @@ class TracksRepositoryImpl(
         return dao.getTracksForFavorites().map { list -> list.map { it.toTrack() } }
     }
 
-    override fun getTracksForPlaylist(playlistId: Long): Flow<List<Track>> {
-        return dao.getTracksForPlaylist(playlistId).map { list -> list.map { it.toTrack() } }
-    }
+//    override suspend fun insertTrackToPlaylist(track: Track, playlistId: Long) {
+//        dao
+//    }
 
-    override suspend fun insertTrackToPlaylist(track: Track, playlistId: Long) {
-        dao.insertOrUpdateTrack(track.toEntity(playlistId = playlistId))
-    }
-
+    @Transaction
     override suspend fun updateTrackFavoriteStatus(track: Track, isFavorite: Boolean) {
-        dao.insertOrUpdateTrack(track.toEntity(favorite = isFavorite))
-    }
+        val trackEntity = track.toEntity(favorite = isFavorite)
 
-    override suspend fun deleteTrackFromPlaylist(track: Track) {
-        dao.updateTrack(track.toEntity(playlistId = 0))
-    }
+        val exists = dao.exists(trackEntity.id)
 
-    override suspend fun deleteTracksByPlaylistId(playlistId: Long) {
-        dao.deleteTracksByPlaylistId(playlistId)
+        if (exists) {
+            dao.updateTrack(trackEntity)
+            Log.i("db", "favorite updated to $isFavorite for trackId=${track.id}")
+        } else {
+            dao.insertTrack(trackEntity)
+            Log.i("db", "favorite inserted to $isFavorite for trackId=${track.id}")
+        }
+
+        if (!isFavorite) {
+            val playlistsCount = dao.getPlaylistsCountForTrack(track.id)
+            Log.i("db", "  $playlistsCount")
+            if (playlistsCount == 0) {
+                dao.deleteTrack(track.toEntity(favorite = false))
+                Log.i("db", "trackId=${track.id} deleted as non-favorite and not in playlists")
+            }
+        }
     }
 }

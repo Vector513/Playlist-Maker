@@ -22,6 +22,7 @@ roomVersion = "2.7.2"
 kspVersion = "2.2.0-2.0.2"
 koinAndroid = "3.3.0"
 datastoreCore = "1.2.0"
+roomKtx = "2.8.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -65,6 +66,7 @@ androidx-room-ksp = { group= "androidx.room", name = "room-compiler", version.re
 
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
 androidx-datastore-core = { group = "androidx.datastore", name = "datastore-core", version.ref = "datastoreCore" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

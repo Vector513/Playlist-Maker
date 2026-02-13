@@ -15,17 +15,14 @@ interface TracksDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertTrack(track: TrackEntity)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrUpdateTrack(track: TrackEntity)
+    @Query("SELECT EXISTS(SELECT 1 FROM tracks WHERE id = :trackId)")
+    suspend fun exists(trackId: Long): Boolean
 
     @Query("SELECT * FROM tracks")
     fun getAllTracks(): Flow<List<TrackEntity>>
 
     @Query("SELECT * FROM tracks WHERE id = :id")
     fun getTrackById(id: Long): Flow<TrackEntity?>
-
-    @Query("SELECT * FROM tracks WHERE playlistId = :playlistId")
-    fun getTracksForPlaylist(playlistId: Long): Flow<List<TrackEntity>>
 
     @Query("SELECT * FROM tracks WHERE favorite = :favorite")
     fun getTracksForFavorites(favorite: Boolean = true): Flow<List<TrackEntity>>
@@ -39,7 +36,18 @@ interface TracksDao {
     @Delete
     suspend fun deleteTrack(trackEntity: TrackEntity)
 
-    @Query("DELETE FROM tracks WHERE playlistId = :playlistId")
-    suspend fun deleteTracksByPlaylistId(playlistId: Long)
+    // wrong
+    @Query("SELECT COUNT(*) FROM playlist_track_cross_ref WHERE trackId = :trackId")
+    suspend fun getPlaylistsCountForTrack(trackId: Long): Int
 
+    @Query("""
+        DELETE FROM tracks
+        WHERE favorite = 0
+          AND id NOT IN (
+              SELECT trackId
+              FROM playlist_track_cross_ref
+              WHERE trackId IS NOT NULL
+          )
+""")
+    suspend fun deleteOrphanTracks()
 }

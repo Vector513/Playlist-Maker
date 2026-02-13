@@ -49,7 +49,7 @@ class TrackViewModel(
     fun insertTrackToPlaylist(playlistId: Long) {
         val track = _currentTrack.value ?: return
         viewModelScope.launch(Dispatchers.IO) {
-            tracksRepository.insertTrackToPlaylist(track, playlistId)
+            playlistsRepository.addTrackToPlaylist(track, playlistId)
         }
     }
 

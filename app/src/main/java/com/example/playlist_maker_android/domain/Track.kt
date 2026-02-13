@@ -9,12 +9,10 @@ data class Track(
     val trackTime: String,
     val image: String,
     var favorite: Boolean,
-    var playlistId: Long
 )
 
 fun Track.toEntity(
-    favorite: Boolean = this.favorite,
-    playlistId: Long = this.playlistId
+    favorite: Boolean = this.favorite
 ): TrackEntity {
     return TrackEntity(
         id = this.id,
@@ -22,7 +20,6 @@ fun Track.toEntity(
         artistName = this.artistName,
         trackTime = this.trackTime,
         image = this.image,
-        favorite = favorite,
-        playlistId = playlistId
+        favorite = favorite
     )
 }

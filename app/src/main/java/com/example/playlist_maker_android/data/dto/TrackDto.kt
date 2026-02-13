@@ -12,15 +12,14 @@ data class TrackDto(
     @SerializedName("artworkUrl100") val image: String?
 )
 
-fun TrackDto.toTrack(favorite: Boolean = false, playlistId: Long = 0): Track =
+fun TrackDto.toTrack(favorite: Boolean = false): Track =
     Track(
         id = this.id,
         trackName = this.trackName,
         artistName = this.artistName,
         trackTime = formatTrackTime(this.trackTimeMillis),
         image = this.image ?: "",
-        favorite = favorite,
-        playlistId = playlistId
+        favorite = favorite
     )
 
 private fun formatTrackTime(millis: Long): String {

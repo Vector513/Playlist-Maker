@@ -13,7 +13,6 @@ data class TrackEntity(
     val trackTime: String,
     val image: String,
     val favorite: Boolean = false,
-    val playlistId: Long
 )
 
 fun TrackEntity.toTrack(): Track {
@@ -23,7 +22,6 @@ fun TrackEntity.toTrack(): Track {
         artistName = this.artistName,
         trackTime = this.trackTime,
         favorite = this.favorite,
-        image = this.image,
-        playlistId = this.playlistId
+        image = this.image
     )
 }
