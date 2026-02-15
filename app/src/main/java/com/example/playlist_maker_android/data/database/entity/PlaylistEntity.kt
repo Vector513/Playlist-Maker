@@ -14,7 +14,8 @@ data class PlaylistEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
     val name: String,
-    val description: String
+    val description: String,
+    val coverImageUri: String? = null
 )
 
 fun PlaylistEntity.toPlaylist(tracks: List<Track>): Playlist {
@@ -22,6 +23,7 @@ fun PlaylistEntity.toPlaylist(tracks: List<Track>): Playlist {
         id = this.id,
         name = this.name,
         description = this.description,
+        coverImageUri = this.coverImageUri,
         tracks = tracks
     )
 }

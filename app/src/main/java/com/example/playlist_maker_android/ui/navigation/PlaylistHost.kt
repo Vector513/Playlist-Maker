@@ -3,7 +3,6 @@ package com.example.playlist_maker_android.ui.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -18,12 +17,8 @@ import com.example.playlist_maker_android.ui.playlists.PlaylistScreen
 import com.example.playlist_maker_android.ui.search.SearchScreen
 import com.example.playlist_maker_android.ui.settings.SettingsScreen
 import com.example.playlist_maker_android.ui.track.TrackScreen
-import com.example.playlist_maker_android.ui.viewmodel.PlaylistsViewModel
-import com.example.playlist_maker_android.ui.viewmodel.PlaylistViewModel
 import com.example.playlist_maker_android.ui.viewmodel.TrackViewModel
-import com.example.playlist_maker_android.ui.viewmodel.FavouritesViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.playlist_maker_android.domain.Track
 
 enum class Screen(val route: String) {
     MAIN("main"),
@@ -38,10 +33,6 @@ enum class Screen(val route: String) {
 
 @Composable
 fun PlaylistHost(navController: NavHostController) {
-    val playlistsViewModel: PlaylistsViewModel = viewModel(
-        factory = PlaylistsViewModel.getViewModelFactory()
-    )
-
     NavHost(
         navController = navController,
         startDestination = Screen.MAIN.route
@@ -76,52 +67,34 @@ fun PlaylistHost(navController: NavHostController) {
 
         composable(Screen.PLAYLISTS.route) {
             PlaylistsScreen(
-                playlistsViewModel = playlistsViewModel,
                 addNewPlaylist = { navigateToNewPlayList(navController) },
                 navigateBack = { navController.popBackStack() },
-                navigateToPlaylist = { index ->
-                    navigateToPlayList(navController, index)
+                navigateToPlaylist = { playlistId ->
+                    navigateToPlayList(navController, playlistId)
                 }
             )
         }
         
         composable(
-            route = "${Screen.PLAYLIST.route}/{index}",
+            route = "${Screen.PLAYLIST.route}/{playlistId}",
             arguments = listOf(
-                navArgument("index") {
-                    type = NavType.IntType
+                navArgument("playlistId") {
+                    type = NavType.LongType
                 }
             )
         ) { backStackEntry ->
-            val index = backStackEntry.arguments?.getInt("index") ?: 0
-            val playlists by playlistsViewModel.playlists.collectAsState(emptyList())
-            
-            // Получаем playlistId из индекса
-            val playlistId = if (index < playlists.size) {
-                playlists[index].id
-            } else {
-                // Fallback: если индекс не найден, используем index + 1 как id
-                (index + 1).toLong()
-            }
-            
-            val playlistViewModel: PlaylistViewModel = viewModel(
-                factory = PlaylistViewModel.getViewModelFactory(playlistId)
-            )
+            val playlistId = backStackEntry.arguments?.getLong("playlistId") ?: 0L
             
             PlaylistScreen(
-                modifier = Modifier,
-                playlistViewModel = playlistViewModel,
-                index = index,
-                onClick = { trackIndex -> navigateToTrack(navController, trackIndex.toLong()) },
-                onBack = {
-                    navController.popBackStack()
-                }
-            )
+                playlistId = playlistId,
+                onClick = { trackIndex -> navigateToTrack(navController, trackIndex) }
+            ) {
+                navController.popBackStack()
+            }
         }
 
         composable(Screen.NEWPLAYLIST.route) {
             NewPlaylistScreen(
-                playlistsViewModel = playlistsViewModel,
                 onBack = {
                     navController.popBackStack()
                 }
@@ -179,8 +152,8 @@ private fun navigateToPlaylists(navController: NavController) {
     navController.navigate(Screen.PLAYLISTS.route)
 }
 
-private fun navigateToPlayList(navController: NavController, index: Int) {
-    navController.navigate("${Screen.PLAYLIST.route}/$index")
+private fun navigateToPlayList(navController: NavController, playlistId: Long) {
+    navController.navigate("${Screen.PLAYLIST.route}/$playlistId")
 }
 
 private fun navigateToNewPlayList(navController: NavController) {

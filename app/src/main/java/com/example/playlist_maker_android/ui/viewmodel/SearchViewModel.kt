@@ -84,5 +84,6 @@ class SearchViewModel(
                 ) as T
                 }
             }
+
     }
 }

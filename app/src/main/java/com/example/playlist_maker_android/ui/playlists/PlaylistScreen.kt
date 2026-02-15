@@ -1,8 +1,8 @@
 package com.example.playlist_maker_android.ui.playlists
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,12 +30,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.example.playlist_maker_android.R
-import com.example.playlist_maker_android.domain.Track
 import com.example.playlist_maker_android.ui.search.components.ArrowBackButton
 import com.example.playlist_maker_android.ui.search.components.TrackListItem
 import com.example.playlist_maker_android.ui.theme.Dimensions
@@ -44,12 +46,14 @@ import com.example.playlist_maker_android.ui.viewmodel.PlaylistViewModel
 @Composable
 fun PlaylistScreen(
     modifier: Modifier = Modifier,
-    playlistViewModel: PlaylistViewModel,
-    index: Int,
+    playlistId: Long,
+    viewModel: PlaylistViewModel = viewModel(
+        factory = PlaylistViewModel.getViewModelFactory(playlistId)
+    ),
     onClick: (Long) -> Unit,
     onBack: () -> Unit
 ) {
-    val playlist by playlistViewModel.playlist.collectAsState(null)
+    val playlist by viewModel.playlist.collectAsState(null)
 
     Scaffold { innerPadding ->
         Column(
@@ -102,12 +106,21 @@ fun PlaylistScreen(
                         .clip(RoundedCornerShape(8.dp)),
                     contentAlignment = Alignment.Center
                 ) {
-                    Image(
-                        painter = painterResource(
-                            id = R.drawable.ic_playlist_default_image
-                        ),
-                        contentDescription = null,
-                        modifier = Modifier.size(79.dp),
+                    Log.i("Playlist", "coverImageUri = ${playlist?.coverImageUri}")
+                    AsyncImage(
+                        model = playlist?.coverImageUri?.toUri(),
+                        contentDescription = playlist?.name,
+                        modifier = Modifier.then(
+                            if (playlist?.coverImageUri == null) {
+                                Modifier.size(79.dp)
+                            } else {
+                                Modifier.fillMaxSize()
+                            }
+                        )
+                            .clip(RoundedCornerShape(8.dp)),
+                        contentScale = ContentScale.Crop,
+                        placeholder = painterResource(R.drawable.ic_playlist_default_image),
+                        error = painterResource(R.drawable.ic_playlist_default_image)
                     )
                 }
 

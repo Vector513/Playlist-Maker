@@ -28,5 +28,6 @@ fun PlaylistWithTracksEntity.toPlaylist() =
         id = this.playlist.id,
         name = this.playlist.name,
         description = this.playlist.description,
+        coverImageUri = this.playlist.coverImageUri,
         tracks = this.tracks.map { it.toTrack() }
     )

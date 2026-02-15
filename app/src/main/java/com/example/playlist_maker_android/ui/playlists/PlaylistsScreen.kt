@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -40,6 +41,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.playlist_maker_android.R
 import com.example.playlist_maker_android.ui.playlists.components.PlaylistListItem
 import com.example.playlist_maker_android.ui.search.components.ArrowBackButton
@@ -48,12 +50,14 @@ import com.example.playlist_maker_android.ui.viewmodel.PlaylistsViewModel
 
 @Composable
 fun PlaylistsScreen(
-    playlistsViewModel: PlaylistsViewModel,
+    viewModel: PlaylistsViewModel = viewModel(
+        factory = PlaylistsViewModel.getViewModelFactory()
+    ),
     addNewPlaylist: () -> Unit,
     navigateBack: () -> Unit,
-    navigateToPlaylist: (Int) -> Unit
+    navigateToPlaylist: (Long) -> Unit
 ) {
-    val playlists by playlistsViewModel.playlists.collectAsState(emptyList())
+    val playlists by viewModel.playlists.collectAsState(emptyList())
 
     Scaffold { innerPadding ->
         Column(
@@ -87,9 +91,9 @@ fun PlaylistsScreen(
 
             Box {
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
-                    items(playlists.size) { index ->
-                        PlaylistListItem(playlist = playlists[index]) {
-                            navigateToPlaylist(index)
+                    items(playlists) { playlist ->
+                        PlaylistListItem(playlist = playlist) {
+                            navigateToPlaylist(playlist.id)
                         }
                     }
                 }
@@ -141,64 +145,3 @@ fun PlaylistsScreen(
 //        )
 //    }
 //}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun BottomSheetExample(
-    modifier: Modifier,
-    isShowPanel: Boolean,
-    onDismissRequest: () -> Unit,
-    content: String
-) {
-    val sheetState = rememberModalBottomSheetState()
-
-    if (isShowPanel) {
-        ModalBottomSheet(
-            onDismissRequest = onDismissRequest,
-            sheetState = sheetState
-        ) {
-            Column(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = content,
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center
-                )
-                Icon(
-                    modifier = Modifier
-                        .size(32.dp)
-                        .padding(top = 16.dp),
-                    imageVector = Icons.Default.Home,
-                    contentDescription = "Icon"
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun FloatButtonExample(
-    modifier: Modifier,
-    callback: () -> Unit
-) {
-    Box (modifier = modifier.fillMaxSize()) {
-        FloatingActionButton(
-            modifier = Modifier
-                .padding(32.dp)
-                .align(Alignment.BottomEnd),
-            onClick = callback,
-            containerColor = Color.Gray,
-            contentColor = Color.White,
-            shape = CircleShape
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Add,
-                contentDescription = "This is FloatingActionButton"
-            )
-        }
-    }
-}
