@@ -129,11 +129,7 @@ fun PlaylistHost(navController: NavHostController) {
         }
 
         composable(Screen.FAVOURITES.route) {
-            val favouritesViewModel: FavouritesViewModel = viewModel(
-                factory = FavouritesViewModel.getViewModelFactory()
-            )
             FavouritesScreen(
-                favouritesViewModel = favouritesViewModel,
                 onBack = {
                     navController.popBackStack()
                 },

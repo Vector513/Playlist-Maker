@@ -25,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.playlist_maker_android.R
 import com.example.playlist_maker_android.ui.search.components.ArrowBackButton
 import com.example.playlist_maker_android.ui.theme.Dimensions
@@ -34,11 +35,13 @@ import com.example.playlist_maker_android.domain.Track
 
 @Composable
 fun FavouritesScreen(
-    favouritesViewModel: FavouritesViewModel,
+    viewModel: FavouritesViewModel = viewModel(
+        factory = FavouritesViewModel.getViewModelFactory()
+    ),
     onBack: () -> Unit,
     onTrackClick: (Track) -> Unit
 ) {
-    val favoriteTracks by favouritesViewModel.favoriteList.collectAsState(emptyList())
+    val favoriteTracks by viewModel.favoriteList.collectAsState(emptyList())
 
     Scaffold { innerPadding ->
         Column(
@@ -107,7 +110,8 @@ fun FavouritesScreen(
                     items(favoriteTracks) { track ->
                         TrackListItem(
                             track = track,
-                            onClick = { onTrackClick(track) }
+                            onClick = { onTrackClick(track) },
+                            onLongClick = { viewModel.toggleFavourite(false, track) }
                         )
                     }
                 }
