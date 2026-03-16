@@ -2,22 +2,16 @@ package com.example.playlist_maker_android.data
 
 import android.database.sqlite.SQLiteConstraintException
 import android.util.Log
-import androidx.compose.ui.platform.LocalGraphicsContext
 import androidx.room.Transaction
 import com.example.playlist_maker_android.data.database.AppDatabase
 import com.example.playlist_maker_android.data.database.entity.PlaylistEntity
 import com.example.playlist_maker_android.data.database.entity.PlaylistTrackCrossRefEntity
-import com.example.playlist_maker_android.data.database.entity.toPlaylist
-import com.example.playlist_maker_android.data.database.entity.toTrack
+import com.example.playlist_maker_android.data.database.entity.toEntity
 import com.example.playlist_maker_android.data.database.toPlaylist
-import com.example.playlist_maker_android.domain.PlaylistsRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
 import com.example.playlist_maker_android.domain.Playlist
+import com.example.playlist_maker_android.domain.PlaylistsRepository
 import com.example.playlist_maker_android.domain.Track
-import com.example.playlist_maker_android.domain.toEntity
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class PlaylistsRepositoryImpl(

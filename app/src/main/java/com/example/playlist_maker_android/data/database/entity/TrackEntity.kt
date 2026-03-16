@@ -25,3 +25,16 @@ fun TrackEntity.toTrack(): Track {
         image = this.image
     )
 }
+
+fun Track.toEntity(
+    favorite: Boolean = this.favorite
+): TrackEntity {
+    return TrackEntity(
+        id = this.id,
+        trackName = this.trackName,
+        artistName = this.artistName,
+        trackTime = this.trackTime,
+        image = this.image,
+        favorite = favorite
+    )
+}

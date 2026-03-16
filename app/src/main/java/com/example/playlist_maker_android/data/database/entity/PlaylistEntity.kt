@@ -27,3 +27,12 @@ fun PlaylistEntity.toPlaylist(tracks: List<Track>): Playlist {
         tracks = tracks
     )
 }
+
+fun Playlist.toEntity(): PlaylistEntity {
+    return PlaylistEntity(
+        id = this.id,
+        name = this.name,
+        description = this.description,
+        coverImageUri = this.coverImageUri
+    )
+}

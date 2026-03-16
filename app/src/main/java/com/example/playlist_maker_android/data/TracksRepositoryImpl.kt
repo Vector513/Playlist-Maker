@@ -12,7 +12,7 @@ import com.example.playlist_maker_android.data.network.NetworkClient
 import com.example.playlist_maker_android.domain.ServerErrorException
 import com.example.playlist_maker_android.domain.Track
 import com.example.playlist_maker_android.domain.TracksRepository
-import com.example.playlist_maker_android.domain.toEntity
+import com.example.playlist_maker_android.data.database.entity.toEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
