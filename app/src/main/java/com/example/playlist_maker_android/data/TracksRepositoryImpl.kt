@@ -61,28 +61,24 @@ class TracksRepositoryImpl(
         return dao.getTrackByNameAndArtist(track.trackName, track.artistName).map { it?.toTrack() }
     }
 
-    override suspend fun getTrackById(id: Long): Flow<Track?> {
-        return dao.getTrackById(id).map {
-            if (it != null) {
-                it.toTrack()
-            }
-            else {
-                val response = networkClient.getTrackById(id)
-                Log.i("network", "getTrackById response code: ${response.resultCode}")
-                when (response) {
-                    is TracksSearchResponse -> {
-                        if (response.results.isNotEmpty()) {
-                            response.results[0].toTrack()
-                        } else {
-                            Log.w("network", "getTrackById: empty results for id=$id")
-                            null
-                        }
-                    }
-                    is BaseResponse -> {
-                        Log.e("network", "getTrackById error: ${response.errorMessage}")
-                        null
-                    }
+    override suspend fun getTrackById(id: Long): Track? {
+        val cached = dao.getTrackByIdOnce(id)
+        if (cached != null) return cached.toTrack()
+
+        val response = networkClient.getTrackById(id)
+        Log.i("network", "getTrackById response code: ${response.resultCode}")
+        return when (response) {
+            is TracksSearchResponse -> {
+                if (response.results.isNotEmpty()) {
+                    response.results[0].toTrack()
+                } else {
+                    Log.w("network", "getTrackById: empty results for id=$id")
+                    null
                 }
+            }
+            is BaseResponse -> {
+                Log.e("network", "getTrackById error: ${response.errorMessage}")
+                null
             }
         }
     }

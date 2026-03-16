@@ -31,10 +31,7 @@ class TrackViewModel(
 
     private fun loadTrack() {
         viewModelScope.launch {
-            tracksRepository.getTrackById(trackId)
-                .collect { track ->
-                    _currentTrack.value = track
-                }
+            _currentTrack.value = tracksRepository.getTrackById(trackId)
         }
     }
 

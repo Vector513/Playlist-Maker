@@ -24,6 +24,9 @@ interface TracksDao {
     @Query("SELECT * FROM tracks WHERE id = :id")
     fun getTrackById(id: Long): Flow<TrackEntity?>
 
+    @Query("SELECT * FROM tracks WHERE id = :id")
+    suspend fun getTrackByIdOnce(id: Long): TrackEntity?
+
     @Query("SELECT * FROM tracks WHERE favorite = :favorite")
     fun getTracksForFavorites(favorite: Boolean = true): Flow<List<TrackEntity>>
 
