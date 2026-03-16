@@ -2,7 +2,7 @@ package com.example.playlist_maker_android.data
 
 import android.database.sqlite.SQLiteConstraintException
 import android.util.Log
-import androidx.room.Transaction
+import androidx.room.withTransaction
 import com.example.playlist_maker_android.data.database.AppDatabase
 import com.example.playlist_maker_android.data.database.entity.PlaylistEntity
 import com.example.playlist_maker_android.data.database.entity.PlaylistTrackCrossRefEntity
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class PlaylistsRepositoryImpl(
-    database: AppDatabase
+    private val database: AppDatabase
 ) : PlaylistsRepository {
     private val playlistsDao = database.PlaylistsDao()
     private val tracksDao = database.TracksDao()
@@ -36,44 +36,48 @@ class PlaylistsRepositoryImpl(
         }
     }
 
-    @Transaction
     override suspend fun addTrackToPlaylist(track: Track, playlistId: Long) {
-        val trackEntity = track.toEntity()
+        database.withTransaction {
+            val trackEntity = track.toEntity()
 
-        val exists = tracksDao.exists(trackEntity.id)
+            val exists = tracksDao.exists(trackEntity.id)
 
-        if (exists) {
-            tracksDao.updateTrack(trackEntity)
-        } else {
-            tracksDao.insertTrack(trackEntity)
+            if (exists) {
+                tracksDao.updateTrack(trackEntity)
+            } else {
+                tracksDao.insertTrack(trackEntity)
+            }
+
+            playlistsDao.addTrackToPlaylist(
+                PlaylistTrackCrossRefEntity(playlistId = playlistId, trackId = trackEntity.id)
+            )
         }
-
-        playlistsDao.addTrackToPlaylist(
-            PlaylistTrackCrossRefEntity(playlistId = playlistId, trackId = trackEntity.id)
-        )
     }
 
-    @Transaction
     override suspend fun deletePlaylistById(id: Long) {
-        playlistsDao.deletePlaylist(PlaylistEntity(
-            id = id,
-            name = "",
-            description = ""
-        ))
-        tracksDao.deleteOrphanTracks()
+        database.withTransaction {
+            playlistsDao.deletePlaylist(PlaylistEntity(
+                id = id,
+                name = "",
+                description = ""
+            ))
+            tracksDao.deleteOrphanTracks()
+        }
     }
 
-    @Transaction
     override suspend fun removeTrackFromPlaylist(trackId: Long, playlistId: Long) {
-        playlistsDao.removeTrackFromPlaylist(
-            PlaylistTrackCrossRefEntity(playlistId, trackId)
-        )
-        tracksDao.deleteOrphanTracks()
+        database.withTransaction {
+            playlistsDao.removeTrackFromPlaylist(
+                PlaylistTrackCrossRefEntity(playlistId, trackId)
+            )
+            tracksDao.deleteOrphanTracks()
+        }
     }
 
-    @Transaction
     override suspend fun removeAllTracksFromPlaylist(playlistId: Long) {
-        playlistsDao.removeAllTracksFromPlaylist(playlistId)
-        tracksDao.deleteOrphanTracks()
+        database.withTransaction {
+            playlistsDao.removeAllTracksFromPlaylist(playlistId)
+            tracksDao.deleteOrphanTracks()
+        }
     }
 }

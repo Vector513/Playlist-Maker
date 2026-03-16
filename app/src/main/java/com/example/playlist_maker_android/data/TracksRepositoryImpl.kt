@@ -1,7 +1,7 @@
 package com.example.playlist_maker_android.data
 
 import android.util.Log
-import androidx.room.Transaction
+import androidx.room.withTransaction
 import com.example.playlist_maker_android.data.database.AppDatabase
 import com.example.playlist_maker_android.data.database.entity.toTrack
 import com.example.playlist_maker_android.data.dto.TracksSearchRequest
@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.map
 
 class TracksRepositoryImpl(
     private val networkClient: NetworkClient,
-    database: AppDatabase
+    private val database: AppDatabase
 ) : TracksRepository {
 
     private val dao = database.TracksDao()
@@ -95,26 +95,27 @@ class TracksRepositoryImpl(
 //        dao
 //    }
 
-    @Transaction
     override suspend fun updateTrackFavoriteStatus(track: Track, isFavorite: Boolean) {
-        val trackEntity = track.toEntity(favorite = isFavorite)
+        database.withTransaction {
+            val trackEntity = track.toEntity(favorite = isFavorite)
 
-        val exists = dao.exists(trackEntity.id)
+            val exists = dao.exists(trackEntity.id)
 
-        if (exists) {
-            dao.updateTrack(trackEntity)
-            Log.i("db", "favorite updated to $isFavorite for trackId=${track.id}")
-        } else {
-            dao.insertTrack(trackEntity)
-            Log.i("db", "favorite inserted to $isFavorite for trackId=${track.id}")
-        }
+            if (exists) {
+                dao.updateTrack(trackEntity)
+                Log.i("db", "favorite updated to $isFavorite for trackId=${track.id}")
+            } else {
+                dao.insertTrack(trackEntity)
+                Log.i("db", "favorite inserted to $isFavorite for trackId=${track.id}")
+            }
 
-        if (!isFavorite) {
-            val playlistsCount = dao.getPlaylistsCountForTrack(track.id)
-            Log.i("db", "  $playlistsCount")
-            if (playlistsCount == 0) {
-                dao.deleteTrack(track.toEntity(favorite = false))
-                Log.i("db", "trackId=${track.id} deleted as non-favorite and not in playlists")
+            if (!isFavorite) {
+                val playlistsCount = dao.getPlaylistsCountForTrack(track.id)
+                Log.i("db", "  $playlistsCount")
+                if (playlistsCount == 0) {
+                    dao.deleteTrack(track.toEntity(favorite = false))
+                    Log.i("db", "trackId=${track.id} deleted as non-favorite and not in playlists")
+                }
             }
         }
     }
