@@ -1,8 +1,6 @@
 package com.example.playlist_maker_android.ui.track
 
-import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,7 +26,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -83,11 +80,10 @@ fun TrackScreen(
 
             Spacer(modifier = Modifier.height(26.dp))
 
-            if (trackState != null) {
-                val track = trackState!!
+            trackState?.let { track ->
 
                 AsyncImage(
-                    model = trackState?.image?.replace("100x100", "312x312"),
+                    model = track.image.replace("100x100", "312x312"),
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -261,7 +257,7 @@ fun TrackScreen(
                         }
                     }
                 }
-            } else {
+            } ?: run {
                 Text(
                     text = "Трек не найден",
                     style = MaterialTheme.typography.bodyLarge.copy(

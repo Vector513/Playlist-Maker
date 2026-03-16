@@ -231,7 +231,7 @@ fun PlaylistScreen(
                     LazyColumn(
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        items(playlist!!.tracks) { track ->
+                        items(tracks) { track ->
                             TrackListItem(
                                 track = track,
                                 onClick = { onClick(track.id) }
