@@ -2,19 +2,13 @@ package com.example.playlist_maker_android.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
 import com.example.playlist_maker_android.domain.Playlist
 import com.example.playlist_maker_android.creator.Creator
 import com.example.playlist_maker_android.domain.PlaylistsRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 
 class PlaylistsViewModel(
-    private val playlistsRepository: PlaylistsRepository
+    playlistsRepository: PlaylistsRepository
 ) : ViewModel() {
 
     val playlists: Flow<List<Playlist>> = playlistsRepository.getAllPlaylists()

@@ -8,7 +8,7 @@ import com.example.playlist_maker_android.data.dto.TracksSearchRequest
 import com.example.playlist_maker_android.data.dto.TracksSearchResponse
 import com.example.playlist_maker_android.data.dto.toTrack
 import com.example.playlist_maker_android.domain.BaseResponse
-import com.example.playlist_maker_android.domain.NetworkClient
+import com.example.playlist_maker_android.data.network.NetworkClient
 import com.example.playlist_maker_android.domain.ServerErrorException
 import com.example.playlist_maker_android.domain.Track
 import com.example.playlist_maker_android.domain.TracksRepository
@@ -45,7 +45,7 @@ class TracksRepositoryImpl(
             }
             is BaseResponse -> {
                 // Если resultCode указывает на HTTP ошибку сервера (4xx, 5xx)
-                if (response.resultCode >= 400 && response.resultCode < 600) {
+                if (response.resultCode in 400..<600) {
                     Log.e("network", "searchTracks server error: ${response.errorMessage}")
                     throw ServerErrorException(response.errorMessage ?: "Ошибка сервера")
                 } else {

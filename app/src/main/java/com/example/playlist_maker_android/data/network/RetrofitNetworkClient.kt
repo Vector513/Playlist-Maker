@@ -3,7 +3,6 @@ package com.example.playlist_maker_android.data.network
 import com.example.playlist_maker_android.data.ITunesApiService
 import com.example.playlist_maker_android.data.dto.TracksSearchRequest
 import com.example.playlist_maker_android.domain.BaseResponse
-import com.example.playlist_maker_android.domain.NetworkClient
 import okio.IOException
 import retrofit2.HttpException
 
