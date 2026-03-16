@@ -28,11 +28,13 @@ class PlaylistsRepositoryImpl(
         return playlistsDao.getPlaylistsWithTracks().map { list -> list.map { it.toPlaylist() } }
     }
 
-    override suspend fun addNewPlaylist(playlist: Playlist) {
-        try {
+    override suspend fun addNewPlaylist(playlist: Playlist): Boolean {
+        return try {
             playlistsDao.insertPlaylist(playlist.toEntity())
+            true
         } catch (e: SQLiteConstraintException) {
-            Log.i("database", "Playlist с таким именем уже существует!")
+            Log.w("database", "Playlist с таким именем уже существует: ${playlist.name}")
+            false
         }
     }
 
