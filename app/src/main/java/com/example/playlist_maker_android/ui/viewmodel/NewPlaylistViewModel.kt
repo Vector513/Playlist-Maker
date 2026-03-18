@@ -1,9 +1,7 @@
 package com.example.playlist_maker_android.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.playlist_maker_android.creator.Creator
 import com.example.playlist_maker_android.domain.Playlist
 import com.example.playlist_maker_android.domain.PlaylistsRepository
 import kotlinx.coroutines.Dispatchers
@@ -41,15 +39,4 @@ class NewPlaylistViewModel(
         _playlistCreated.value = null
     }
 
-    companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory =
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return NewPlaylistViewModel(
-                        Creator.getPlaylistsRepository()
-                    ) as T
-                }
-            }
-    }
 }

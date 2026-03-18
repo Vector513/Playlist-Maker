@@ -35,8 +35,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 import com.example.playlist_maker_android.R
 import com.example.playlist_maker_android.ui.search.components.ArrowBackButton
 import com.example.playlist_maker_android.ui.search.components.TrackListItem
@@ -47,9 +48,7 @@ import com.example.playlist_maker_android.ui.viewmodel.PlaylistViewModel
 fun PlaylistScreen(
     modifier: Modifier = Modifier,
     playlistId: Long,
-    viewModel: PlaylistViewModel = viewModel(
-        factory = PlaylistViewModel.getViewModelFactory(playlistId)
-    ),
+    viewModel: PlaylistViewModel = koinViewModel { parametersOf(playlistId) },
     onClick: (Long) -> Unit,
     onBack: () -> Unit
 ) {

@@ -1,9 +1,7 @@
 package com.example.playlist_maker_android.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.playlist_maker_android.creator.Creator
 import com.example.playlist_maker_android.domain.Playlist
 import com.example.playlist_maker_android.domain.PlaylistsRepository
 import com.example.playlist_maker_android.domain.Track
@@ -50,18 +48,5 @@ class TrackViewModel(
         }
     }
 
-    companion object {
-        fun getViewModelFactory(trackId: Long): ViewModelProvider.Factory =
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return TrackViewModel(
-                        tracksRepository = Creator.getTracksRepository(),
-                        playlistsRepository = Creator.getPlaylistsRepository(),
-                        trackId = trackId
-                    ) as T
-                }
-            }
-    }
 }
 

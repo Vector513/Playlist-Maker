@@ -49,16 +49,14 @@ import coil.compose.AsyncImage
 import com.example.playlist_maker_android.R
 import com.example.playlist_maker_android.ui.search.components.ArrowBackButton
 import com.example.playlist_maker_android.ui.theme.Dimensions
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.playlist_maker_android.ui.viewmodel.NewPlaylistViewModel
+import org.koin.androidx.compose.koinViewModel
 import java.io.File
 import java.io.FileOutputStream
 
 @Composable
 fun NewPlaylistScreen(
-    viewModel: NewPlaylistViewModel = viewModel(
-        factory = NewPlaylistViewModel.getViewModelFactory()
-    ),
+    viewModel: NewPlaylistViewModel = koinViewModel(),
     onBack: () -> Unit
 ) {
     Scaffold { innerPadding ->

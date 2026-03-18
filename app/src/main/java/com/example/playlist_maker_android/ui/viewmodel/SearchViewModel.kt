@@ -2,9 +2,7 @@ package com.example.playlist_maker_android.ui.viewmodel
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.playlist_maker_android.creator.Creator
 import com.example.playlist_maker_android.domain.ServerErrorException
 import com.example.playlist_maker_android.domain.TracksRepository
 import com.example.playlist_maker_android.domain.SearchHistoryRepository
@@ -73,17 +71,4 @@ class SearchViewModel(
 
     suspend fun getHistoryList() = searchHistoryRepository.getHistoryRequests()
 
-    companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory =
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return SearchViewModel(
-                    Creator.getTracksRepository(),
-                    Creator.getSearchHistoryRepository()
-                ) as T
-                }
-            }
-
-    }
 }

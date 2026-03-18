@@ -96,4 +96,5 @@ dependencies {
     ksp(libs.androidx.room.ksp)
 
     implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
 }

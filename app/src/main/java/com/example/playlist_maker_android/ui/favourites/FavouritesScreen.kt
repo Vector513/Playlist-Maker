@@ -25,8 +25,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.playlist_maker_android.R
+import org.koin.androidx.compose.koinViewModel
 import com.example.playlist_maker_android.ui.search.components.ArrowBackButton
 import com.example.playlist_maker_android.ui.theme.Dimensions
 import com.example.playlist_maker_android.ui.viewmodel.FavouritesViewModel
@@ -35,9 +35,7 @@ import com.example.playlist_maker_android.domain.Track
 
 @Composable
 fun FavouritesScreen(
-    viewModel: FavouritesViewModel = viewModel(
-        factory = FavouritesViewModel.getViewModelFactory()
-    ),
+    viewModel: FavouritesViewModel = koinViewModel(),
     onBack: () -> Unit,
     onTrackClick: (Track) -> Unit
 ) {

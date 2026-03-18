@@ -1,8 +1,6 @@
 package com.example.playlist_maker_android.ui.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -18,7 +16,8 @@ import com.example.playlist_maker_android.ui.search.SearchScreen
 import com.example.playlist_maker_android.ui.settings.SettingsScreen
 import com.example.playlist_maker_android.ui.track.TrackScreen
 import com.example.playlist_maker_android.ui.viewmodel.TrackViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 enum class Screen(val route: String) {
     MAIN("main"),
@@ -116,9 +115,7 @@ fun PlaylistHost(navController: NavHostController) {
             val trackId = backStackEntry.arguments?.getString("trackId")?.toLongOrNull()
 
             if (trackId != null) {
-                val trackViewModel: TrackViewModel = viewModel(
-                    factory = TrackViewModel.getViewModelFactory(trackId)
-                )
+                val trackViewModel: TrackViewModel = koinViewModel { parametersOf(trackId) }
                 TrackScreen(
                     viewModel = trackViewModel,
                     onBack = {
