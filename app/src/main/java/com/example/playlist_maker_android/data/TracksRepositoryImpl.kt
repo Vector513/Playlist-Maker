@@ -7,7 +7,7 @@ import com.example.playlist_maker_android.data.database.entity.toTrack
 import com.example.playlist_maker_android.data.dto.TracksSearchRequest
 import com.example.playlist_maker_android.data.dto.TracksSearchResponse
 import com.example.playlist_maker_android.data.dto.toTrack
-import com.example.playlist_maker_android.domain.BaseResponse
+import com.example.playlist_maker_android.data.dto.BaseResponse
 import com.example.playlist_maker_android.data.network.NetworkClient
 import com.example.playlist_maker_android.domain.ServerErrorException
 import com.example.playlist_maker_android.domain.Track
@@ -86,10 +86,6 @@ class TracksRepositoryImpl(
     override fun getFavoriteTracks(): Flow<List<Track>> {
         return dao.getTracksForFavorites().map { list -> list.map { it.toTrack() } }
     }
-
-//    override suspend fun insertTrackToPlaylist(track: Track, playlistId: Long) {
-//        dao
-//    }
 
     override suspend fun updateTrackFavoriteStatus(track: Track, isFavorite: Boolean) {
         database.withTransaction {
