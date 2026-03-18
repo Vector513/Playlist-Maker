@@ -1,7 +1,6 @@
 package com.example.playlist_maker_android.ui.main
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -18,11 +17,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
-import androidx.room.Room
-import com.example.playlist_maker_android.data.database.AppDatabase
 import com.example.playlist_maker_android.ui.navigation.PlaylistHost
 import com.example.playlist_maker_android.ui.favourites.components.FavouritesButton
 import com.example.playlist_maker_android.ui.playlists.components.PlaylistButton
@@ -35,10 +31,6 @@ import com.example.playlist_maker_android.ui.theme.PlaylistmakerandroidTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-//        val database = Room.databaseBuilder(this, AppDatabase::class.java, "database.db").build()
-
-
         enableEdgeToEdge()
 
         setContent {
@@ -108,9 +100,6 @@ private fun Menu(
             )
     ) {
         Column {
-            // TODO: Заменить Spacer на modifier.safePadding...
-            //  Создать AppSpacing для padding
-
             Spacer(modifier = Modifier
                 .height(Dimensions.ButtonVerticalPadding))
             SearchButton(onNavigateToSearch = onSearchClick)

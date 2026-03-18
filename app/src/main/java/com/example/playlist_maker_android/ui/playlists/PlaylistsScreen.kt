@@ -110,22 +110,3 @@ fun PlaylistsScreen(
         }
     }
 }
-
-//@Composable
-//fun PlaylistsScreen(
-//    onBack: () -> Unit
-//) {
-//    var showBottomSheet  by remember { mutableStateOf(false) }
-//    Scaffold(
-//        modifier = Modifier.fillMaxSize()
-//    ) { innerPadding ->
-//        FloatButtonExample(Modifier) { showBottomSheet = true }
-//
-//        BottomSheetExample(
-//            modifier = Modifier.padding(innerPadding),
-//            isShowPanel = showBottomSheet,
-//            onDismissRequest = { showBottomSheet  = false },
-//            content = "Это панель BottomSheet"
-//        )
-//    }
-//}

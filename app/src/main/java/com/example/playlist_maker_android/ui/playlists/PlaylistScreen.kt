@@ -204,30 +204,7 @@ fun PlaylistScreen(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-//                if (playlist!!.tracks.isEmpty()) {
-//                    Column(
-//                        horizontalAlignment = Alignment.CenterHorizontally,
-//                        modifier = Modifier.fillMaxSize()
-//                    ) {
-//                        Spacer(modifier = Modifier.height(150.dp))
-//                        Image(
-//                            painter = painterResource(id = R.drawable.ic_music_not_found),
-//                            contentDescription = "Music not found",
-//                            modifier = Modifier
-//                                .width(Dimensions.MusicNotFoundSize)
-//                                .height(Dimensions.MusicNotFoundSize),
-//                            alignment = Alignment.Center
-//                        )
-//                        Spacer(modifier = Modifier.height(16.dp))
-//                        Text(
-//                            text = stringResource(R.string.playlist_empty_text),
-//                            style = MaterialTheme.typography.bodyLarge.copy(
-//                                color = MaterialTheme.colorScheme.onPrimary
-//                            )
-//                        )
-//                    }
-//                } else {
-                    LazyColumn(
+                LazyColumn(
                         modifier = Modifier.fillMaxSize()
                     ) {
                         items(tracks) { track ->
@@ -237,7 +214,6 @@ fun PlaylistScreen(
                             )
                         }
                     }
-//                }
             }
         }
     }

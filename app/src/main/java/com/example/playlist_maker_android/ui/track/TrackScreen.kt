@@ -233,25 +233,6 @@ fun TrackScreen(
                                         viewModel.insertTrackToPlaylist(playlist.id)
                                         showBottomSheet = false
                                     }
-
-//                                    Row(
-//                                        modifier = Modifier
-//                                            .fillMaxWidth()
-//                                            .padding(vertical = 8.dp)
-//                                            .clickable {
-//                                                playlistsViewModel.insertTrackToPlaylist(
-//                                                    track,
-//                                                    playlist.id
-//                                                )
-//                                                showBottomSheet = false
-//                                            },
-//                                        verticalAlignment = Alignment.CenterVertically
-//                                    ) {
-//                                        Text(
-//                                            text = playlist.name,
-//                                            style = MaterialTheme.typography.bodyLarge
-//                                        )
-//                                    }
                                 }
                             }
                         }

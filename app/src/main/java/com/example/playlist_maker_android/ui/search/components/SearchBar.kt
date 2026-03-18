@@ -176,10 +176,3 @@ fun SearchBar(
         }
     }
 }
-
-
-//@Preview(device = "spec:width=411dp,height=891dp", showSystemUi = true, showBackground = true)
-//@Composable
-//private fun SearchPreview() {
-//    SearchBar()
-//}
