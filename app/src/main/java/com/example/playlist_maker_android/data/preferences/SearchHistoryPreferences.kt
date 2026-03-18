@@ -3,44 +3,34 @@ package com.example.playlist_maker_android.data.preferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
-import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 
 
 class SearchHistoryPreferences(
     private val dataStore: DataStore<Preferences>,
-    private val coroutineScope: CoroutineScope = CoroutineScope(
-        CoroutineName("search-history-preferences") + SupervisorJob()
-    )
 ) {
     private val preferencesKey = stringPreferencesKey("search_history")
 
-    fun addEntry(word: String) {
+    suspend fun addEntry(word: String) {
         if (word.isBlank()) return
 
-        coroutineScope.launch {
-            dataStore.updateData { preferences ->
+        dataStore.updateData { preferences ->
+            val historyString = preferences[preferencesKey].orEmpty()
+            val history = if (historyString.isNotEmpty()) {
+                historyString.split(SEPARATOR).toMutableList()
+            } else {
+                mutableListOf()
+            }
 
-                val historyString = preferences[preferencesKey].orEmpty()
-                val history = if (historyString.isNotEmpty()) {
-                    historyString.split(SEPARATOR).toMutableList()
-                } else {
-                    mutableListOf()
-                }
+            history.remove(word)
+            history.add(0, word)
 
-                history.remove(word)
-                history.add(0, word)
+            val trimmed = history.take(MAX_ENTRIES)
 
-                val trimmed = history.take(MAX_ENTRIES)
-
-                preferences.toMutablePreferences().apply {
-                    this[preferencesKey] = trimmed.joinToString(SEPARATOR)
-                }
+            preferences.toMutablePreferences().apply {
+                this[preferencesKey] = trimmed.joinToString(SEPARATOR)
             }
         }
     }
