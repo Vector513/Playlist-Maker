@@ -7,12 +7,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.playlist_maker_android.R
+import com.example.playlist_maker_android.ui.components.buttons.BaseButton
+import com.example.playlist_maker_android.ui.components.buttons.CommonButtonContent
 import com.example.playlist_maker_android.ui.theme.Dimensions
 import com.example.playlist_maker_android.ui.theme.PlaylistmakerandroidTheme
 
 @Composable
 internal fun SettingsButtonContent() {
-    _root_ide_package_.com.example.playlist_maker_android.ui.components.buttons.CommonButtonContent(
+    CommonButtonContent(
         painterResource(R.drawable.ic_settings),
         stringResource(R.string.settings_button_text)
     )
@@ -22,7 +24,7 @@ internal fun SettingsButtonContent() {
 internal fun SettingsButton(
     onNavigateToSettings: (() -> Unit)
 ) {
-    _root_ide_package_.com.example.playlist_maker_android.ui.components.buttons.BaseButton(
+    BaseButton(
         onClick = onNavigateToSettings,
         modifier = Modifier.padding(horizontal = Dimensions.ButtonHorizontalPadding),
         content = { SettingsButtonContent() }

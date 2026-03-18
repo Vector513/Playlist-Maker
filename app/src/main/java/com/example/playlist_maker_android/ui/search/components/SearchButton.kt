@@ -7,6 +7,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.playlist_maker_android.R
+import com.example.playlist_maker_android.ui.components.buttons.BaseButton
+import com.example.playlist_maker_android.ui.components.buttons.CommonButtonContent
 import com.example.playlist_maker_android.ui.theme.Dimensions
 import com.example.playlist_maker_android.ui.theme.PlaylistmakerandroidTheme
 
@@ -14,7 +16,7 @@ import com.example.playlist_maker_android.ui.theme.PlaylistmakerandroidTheme
 internal fun SearchButton(
     onNavigateToSearch: (() -> Unit)
 ) {
-    _root_ide_package_.com.example.playlist_maker_android.ui.components.buttons.BaseButton(
+    BaseButton(
         onClick = onNavigateToSearch,
         modifier = Modifier
             .padding(horizontal = Dimensions.ButtonHorizontalPadding),
@@ -32,7 +34,7 @@ internal fun SearchButtonPreview() {
 
 @Composable
 private fun SearchButtonContent() {
-    _root_ide_package_.com.example.playlist_maker_android.ui.components.buttons.CommonButtonContent(
+    CommonButtonContent(
         painterResource(R.drawable.ic_search),
         stringResource(R.string.search_button_text)
     )

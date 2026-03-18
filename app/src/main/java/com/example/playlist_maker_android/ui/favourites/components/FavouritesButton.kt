@@ -7,12 +7,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.playlist_maker_android.R
+import com.example.playlist_maker_android.ui.components.buttons.BaseButton
+import com.example.playlist_maker_android.ui.components.buttons.CommonButtonContent
 import com.example.playlist_maker_android.ui.theme.Dimensions
 import com.example.playlist_maker_android.ui.theme.PlaylistmakerandroidTheme
 
 @Composable
 internal fun FavouritesButtonContent() {
-    _root_ide_package_.com.example.playlist_maker_android.ui.components.buttons.CommonButtonContent(
+    CommonButtonContent(
         painterResource(R.drawable.ic_favourites),
         stringResource(R.string.favourites_button_text)
     )
@@ -22,7 +24,7 @@ internal fun FavouritesButtonContent() {
 internal fun FavouritesButton(
     onClick: () -> Unit
 ) {
-    _root_ide_package_.com.example.playlist_maker_android.ui.components.buttons.BaseButton(
+    BaseButton(
         onClick = onClick,
         modifier = Modifier.padding(horizontal = Dimensions.ButtonHorizontalPadding),
         content = { FavouritesButtonContent() }

@@ -7,6 +7,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.playlist_maker_android.R
+import com.example.playlist_maker_android.ui.components.buttons.BaseButton
+import com.example.playlist_maker_android.ui.components.buttons.CommonButtonContent
 import com.example.playlist_maker_android.ui.theme.Dimensions
 import com.example.playlist_maker_android.ui.theme.PlaylistmakerandroidTheme
 
@@ -14,7 +16,7 @@ import com.example.playlist_maker_android.ui.theme.PlaylistmakerandroidTheme
 internal fun PlaylistButton(
     onClick: () -> Unit
 ) {
-    _root_ide_package_.com.example.playlist_maker_android.ui.components.buttons.BaseButton(
+    BaseButton(
         onClick = onClick,
         modifier = Modifier.padding(horizontal = Dimensions.ButtonHorizontalPadding),
         content = { PlaylistButtonContent() }
@@ -31,7 +33,7 @@ internal fun PlaylistButtonPreview() {
 
 @Composable
 internal fun PlaylistButtonContent() {
-    _root_ide_package_.com.example.playlist_maker_android.ui.components.buttons.CommonButtonContent(
+    CommonButtonContent(
         painterResource(R.drawable.ic_library),
         stringResource(R.string.library_button_text)
     )
