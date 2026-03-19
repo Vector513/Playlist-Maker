@@ -1,7 +1,6 @@
 package com.example.playlist_maker_android.ui.playlists
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -30,6 +29,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -52,13 +52,24 @@ import com.example.playlist_maker_android.ui.theme.Dimensions
 import com.example.playlist_maker_android.ui.viewmodel.NewPlaylistViewModel
 import org.koin.androidx.compose.koinViewModel
 import java.io.File
-import java.io.FileOutputStream
 
 @Composable
 fun NewPlaylistScreen(
     viewModel: NewPlaylistViewModel = koinViewModel(),
     onBack: () -> Unit
 ) {
+    val name by viewModel.name.collectAsState()
+    val description by viewModel.description.collectAsState()
+    val coverImagePath by viewModel.coverImageUri.collectAsState()
+    val playlistCreated by viewModel.playlistCreated.collectAsState()
+
+    LaunchedEffect(playlistCreated) {
+        if (playlistCreated == true) {
+            onBack()
+            viewModel.resetCreationState()
+        }
+    }
+
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
@@ -91,24 +102,13 @@ fun NewPlaylistScreen(
             Spacer(modifier = Modifier.height(26.dp))
 
             val context = LocalContext.current
-            val coverImagePath by viewModel.coverImageUri.collectAsState() // путь к локальному файлу
 
-// Launcher для выбора изображения
             val imagePickerLauncher = rememberLauncherForActivityResult(
                 contract = ActivityResultContracts.GetContent()
             ) { uri: Uri? ->
-                uri?.let { selectedUri ->
-                    // Генерируем уникальное имя файла
-                    val uniqueFileName = "cover_${System.currentTimeMillis()}.png"
-
-                    val savedPath = copyImageToInternalStorage(context, selectedUri, uniqueFileName)
-                    savedPath?.let {
-                        viewModel.setCoverImageUri(it) // сохраняем путь к локальной копии
-                    }
-                }
+                uri?.let { viewModel.saveImageToStorage(context, it) }
             }
 
-// Launcher для запроса разрешения (только для старых версий Android)
             val permissionLauncher = rememberLauncherForActivityResult(
                 contract = ActivityResultContracts.RequestPermission()
             ) { isGranted: Boolean ->
@@ -124,11 +124,9 @@ fun NewPlaylistScreen(
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(8.dp))
                     .clickable {
-                        // Для Android 13+ (API 33+) разрешения не нужны
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                             imagePickerLauncher.launch("image/*")
                         } else {
-                            // Для старых версий проверяем разрешение
                             when {
                                 ContextCompat.checkSelfPermission(
                                     context,
@@ -144,9 +142,8 @@ fun NewPlaylistScreen(
                     },
                 contentAlignment = Alignment.Center
             ) {
-                // Показываем выбранное изображение из внутреннего хранилища
                 AsyncImage(
-                    model = coverImagePath?.let { File(it) }, // путь к локальному файлу
+                    model = coverImagePath?.let { File(it) },
                     contentDescription = "",
                     modifier = Modifier.then(
                         if (coverImagePath == null) Modifier.size(79.dp) else Modifier.fillMaxSize()
@@ -159,9 +156,6 @@ fun NewPlaylistScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            var name by remember { mutableStateOf("") }
-            var description by remember { mutableStateOf("") }
-
             Column(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
@@ -171,7 +165,7 @@ fun NewPlaylistScreen(
 
                 OutlinedTextField(
                     value = name,
-                    onValueChange = { name = it },
+                    onValueChange = { viewModel.onNameChanged(it) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .onFocusChanged { isNameFocused = it.isFocused },
@@ -211,7 +205,7 @@ fun NewPlaylistScreen(
                 var isDescriptionFocused by remember { mutableStateOf(false) }
                 OutlinedTextField(
                     value = description,
-                    onValueChange = { description = it },
+                    onValueChange = { viewModel.onDescriptionChanged(it) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .onFocusChanged { isDescriptionFocused = it.isFocused },
@@ -250,10 +244,7 @@ fun NewPlaylistScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             Button(
-                onClick = {
-                    viewModel.createNewPlayList(name, description)
-                    onBack()
-                },
+                onClick = { viewModel.createNewPlayList() },
                 enabled = name.isNotBlank(),
                 modifier = Modifier
                     .padding(horizontal = 17.dp)
@@ -261,10 +252,7 @@ fun NewPlaylistScreen(
                     .height(44.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.background,
-//                    contentColor = MaterialTheme.colorScheme.,
                     disabledContainerColor = MaterialTheme.colorScheme.tertiary,
-//                    disabledContentColor = Color.White
-
                 ),
                 shape = MaterialTheme.shapes.medium
             ) {
@@ -278,22 +266,5 @@ fun NewPlaylistScreen(
 
             Spacer(Modifier.height(32.dp))
         }
-    }
-}
-
-// --- Функция для копирования изображения во внутреннее хранилище ---
-fun copyImageToInternalStorage(context: Context, uri: Uri, fileName: String): String? {
-    return try {
-        val inputStream = context.contentResolver.openInputStream(uri)
-        val file = File(context.filesDir, fileName) // сохраняем под уникальным именем
-        inputStream?.use { input ->
-            FileOutputStream(file).use { output ->
-                input.copyTo(output)
-            }
-        }
-        file.absolutePath
-    } catch (e: Exception) {
-        e.printStackTrace()
-        null
     }
 }
