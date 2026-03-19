@@ -30,4 +30,35 @@
     <string name="favourites_media_empty_text">Ваша медиатека пуста</string>
     <string name="playlists_panel_header_name">Плейлисты</string>
     <string name="playlist_empty_text">Плейлист пуст</string>
+    <string name="loading_text">Загрузка…</string>
+    <string name="track_not_found_text">Трек не найден</string>
+    <string name="search_empty_hint">Введите строку для поиска</string>
+    <string name="error_prefix">Ошибка: %s</string>
+    <string name="network_error">Проблемы с сетью: %s</string>
+    <string name="server_response_error">Не удалось обработать ответ сервера: %s</string>
+    <string name="unknown_error">Неизвестная ошибка</string>
+    <string name="share_app_chooser">Поделиться приложением через</string>
+    <string name="choose_email_client">Выберите почтовый клиент</string>
+    <string name="no_email_client">На устройстве нет почтового клиента</string>
+    <string name="choose_browser">Выберите браузер</string>
+    <string name="browser_open_error">Не удалось открыть браузер</string>
+    <string name="search_icon_description">Поиск</string>
+    <string name="clear_icon_description">Очистить</string>
+    <string name="track_image_description">Обложка трека %s</string>
+    <string name="duration_format">%d %s</string>
+    <string name="tracks_count_format">%d %s</string>
+
+    <plurals name="minutes_plural">
+        <item quantity="one">минута</item>
+        <item quantity="few">минуты</item>
+        <item quantity="many">минут</item>
+        <item quantity="other">минут</item>
+    </plurals>
+
+    <plurals name="tracks_plural">
+        <item quantity="one">трек</item>
+        <item quantity="few">трека</item>
+        <item quantity="many">треков</item>
+        <item quantity="other">треков</item>
+    </plurals>
 </resources>

@@ -1,8 +1,6 @@
 package com.example.playlist_maker_android.ui.search.components
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -15,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -35,10 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -110,7 +104,7 @@ fun SearchBar(
 
                         Icon(
                             painter = painterResource(R.drawable.ic_search_bar),
-                            contentDescription = "Поиск",
+                            contentDescription = stringResource(R.string.search_icon_description),
                             modifier = Modifier
                                 .size(Dimensions.SearchBarIconSize)
                                 .clickable { onSearchClick() },
@@ -140,7 +134,7 @@ fun SearchBar(
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Clear,
-                                    contentDescription = "Очистить",
+                                    contentDescription = stringResource(R.string.clear_icon_description),
                                     tint = MaterialTheme.colorScheme.onSecondary,
                                     modifier = Modifier.size(Dimensions.ClearIconSize)
                                 )

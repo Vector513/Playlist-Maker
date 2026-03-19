@@ -240,7 +240,7 @@ fun TrackScreen(
                 }
             } ?: run {
                 Text(
-                    text = "Трек не найден",
+                    text = stringResource(R.string.track_not_found_text),
                     style = MaterialTheme.typography.bodyLarge.copy(
                         color = MaterialTheme.colorScheme.onPrimary
                     )

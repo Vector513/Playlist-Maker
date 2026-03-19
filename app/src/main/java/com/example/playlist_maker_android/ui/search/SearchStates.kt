@@ -29,7 +29,7 @@ fun SearchEmptyState(
 ) {
     if (text.isEmpty())  {
         Text(
-            "Введите строку для поиска",
+            stringResource(R.string.search_empty_hint),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onPrimary,
             textAlign = TextAlign.Center
@@ -48,7 +48,7 @@ fun SearchLoadingState() {
 @Composable
 fun SearchErrorState(error: String) {
     Text(
-        text = "Ошибка: $error",
+        text = stringResource(R.string.error_prefix, error),
         style = MaterialTheme.typography.bodyLarge.copy(
             color = MaterialTheme.colorScheme.onPrimary
         )

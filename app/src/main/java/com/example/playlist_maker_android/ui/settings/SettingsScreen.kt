@@ -245,7 +245,7 @@ fun shareApp(context: Context, message: String) {
         putExtra(Intent.EXTRA_TEXT, message)
     }
     context.startActivity(
-        Intent.createChooser(intent, "Поделиться приложением через")
+        Intent.createChooser(intent, context.getString(R.string.share_app_chooser))
     )
 }
 
@@ -328,12 +328,12 @@ fun sendEmail(context: Context,
 
     try {
         context.startActivity(
-            Intent.createChooser(emailIntent, "Выберите почтовый клиент")
+            Intent.createChooser(emailIntent, context.getString(R.string.choose_email_client))
         )
     } catch (ex: ActivityNotFoundException) {
         Toast.makeText(
             context,
-            "На устройстве нет почтового клиента",
+            context.getString(R.string.no_email_client),
             Toast.LENGTH_SHORT
         ).show()
     }
@@ -397,13 +397,13 @@ fun openUserAgreement(
 ) {
     val intent = Intent(Intent.ACTION_VIEW, url.toUri())
 
-    val chooser = Intent.createChooser(intent, "Выберите браузер")
+    val chooser = Intent.createChooser(intent, context.getString(R.string.choose_browser))
     chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
     try {
         context.startActivity(chooser)
     } catch (e: Exception) {
-        Toast.makeText(context, "Не удалось открыть браузер", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, context.getString(R.string.browser_open_error), Toast.LENGTH_SHORT).show()
     }
 }
 

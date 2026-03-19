@@ -1,6 +1,5 @@
 package com.example.playlist_maker_android.ui.playlists
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,7 +30,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
@@ -81,7 +82,7 @@ fun PlaylistScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Загрузка...",
+                        text = stringResource(R.string.loading_text),
                         style = MaterialTheme.typography.bodyLarge.copy(
                             color = MaterialTheme.colorScheme.onPrimary
                         )
@@ -89,13 +90,16 @@ fun PlaylistScreen(
                 }
             }
             else {
+                val context = LocalContext.current
                 val tracks = playlist?.tracks.orEmpty()
                 val totalSeconds = tracks.sumOf { track ->
                     parseTrackTimeSeconds(track.trackTime)
                 }
                 val totalMinutes = totalSeconds / 60
-                val durationText = formatMinutesRu(totalMinutes)
-                val tracksCountText = formatTracksCountRu(tracks.size)
+                val minutesWord = context.resources.getQuantityString(R.plurals.minutes_plural, totalMinutes)
+                val durationText = "$totalMinutes $minutesWord"
+                val tracksWord = context.resources.getQuantityString(R.plurals.tracks_plural, tracks.size)
+                val tracksCountText = "${tracks.size} $tracksWord"
 
                 Box(
                     modifier = Modifier
@@ -105,7 +109,6 @@ fun PlaylistScreen(
                         .clip(RoundedCornerShape(8.dp)),
                     contentAlignment = Alignment.Center
                 ) {
-                    Log.i("Playlist", "coverImageUri = ${playlist?.coverImageUri}")
                     AsyncImage(
                         model = playlist?.coverImageUri?.toUri(),
                         contentDescription = playlist?.name,
@@ -228,24 +231,3 @@ private fun parseTrackTimeSeconds(trackTime: String): Int {
     return (minutes * 60 + seconds).coerceAtLeast(0)
 }
 
-private fun formatMinutesRu(minutes: Int): String {
-    val m = minutes.coerceAtLeast(0)
-    val word = pluralRu(m, one = "минута", few = "минуты", many = "минут")
-    return "$m $word"
-}
-
-private fun formatTracksCountRu(count: Int): String {
-    val c = count.coerceAtLeast(0)
-    val word = pluralRu(c, one = "трек", few = "трека", many = "треков")
-    return "$c $word"
-}
-
-private fun pluralRu(number: Int, one: String, few: String, many: String): String {
-    val n = number % 100
-    if (n in 11..14) return many
-    return when (number % 10) {
-        1 -> one
-        2, 3, 4 -> few
-        else -> many
-    }
-}
