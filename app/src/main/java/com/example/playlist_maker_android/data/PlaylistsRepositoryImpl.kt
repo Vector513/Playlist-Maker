@@ -1,7 +1,6 @@
 package com.example.playlist_maker_android.data
 
 import android.database.sqlite.SQLiteConstraintException
-import android.util.Log
 import androidx.room.withTransaction
 import com.example.playlist_maker_android.data.database.AppDatabase
 import com.example.playlist_maker_android.data.database.entity.PlaylistEntity
@@ -32,8 +31,7 @@ class PlaylistsRepositoryImpl(
         return try {
             playlistsDao.insertPlaylist(playlist.toEntity())
             true
-        } catch (e: SQLiteConstraintException) {
-            Log.w("database", "Playlist с таким именем уже существует: ${playlist.name}")
+        } catch (_: SQLiteConstraintException) {
             false
         }
     }

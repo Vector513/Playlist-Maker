@@ -83,7 +83,7 @@ fun TrackScreen(
             trackState?.let { track ->
 
                 AsyncImage(
-                    model = track.image.replace("100x100", "312x312"),
+                    model = track.highResImage,
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()

@@ -1,6 +1,5 @@
 package com.example.playlist_maker_android.data
 
-import android.util.Log
 import androidx.room.withTransaction
 import com.example.playlist_maker_android.data.database.AppDatabase
 import com.example.playlist_maker_android.data.database.entity.toTrack
@@ -25,32 +24,20 @@ class TracksRepositoryImpl(
 
     override suspend fun searchTracks(expression: String): List<Track> {
         val response = networkClient.search(TracksSearchRequest(expression))
-        Log.i("network", "searchTracks response code: ${response.resultCode}")
         return when (response) {
             is TracksSearchResponse -> {
-                if (response.results.isNotEmpty()) {
-                    response.results.mapNotNull { dto ->
-                        try {
-                            Log.i("networkTrackId", "$dto")
-                            dto.toTrack()
-                        } catch (e: Exception) {
-                            Log.e("network", "Error mapping track: ${e.message}", e)
-                            null
-                        }
+                response.results.mapNotNull { dto ->
+                    try {
+                        dto.toTrack()
+                    } catch (_: Exception) {
+                        null
                     }
-                } else {
-                    Log.i("network", "searchTracks: empty results for expression='$expression'")
-                    emptyList()
                 }
             }
             is BaseResponse -> {
-                // Если resultCode указывает на HTTP ошибку сервера (4xx, 5xx)
                 if (response.resultCode in 400..<600) {
-                    Log.e("network", "searchTracks server error: ${response.errorMessage}")
-                    throw ServerErrorException(response.errorMessage ?: "Ошибка сервера")
+                    throw ServerErrorException(response.errorMessage ?: "Server error")
                 } else {
-                    // Сетевые ошибки или другие ошибки обрабатываются как обычные ошибки
-                    Log.e("network", "searchTracks error: ${response.errorMessage}")
                     emptyList()
                 }
             }
@@ -66,20 +53,11 @@ class TracksRepositoryImpl(
         if (cached != null) return cached.toTrack()
 
         val response = networkClient.getTrackById(id)
-        Log.i("network", "getTrackById response code: ${response.resultCode}")
         return when (response) {
             is TracksSearchResponse -> {
-                if (response.results.isNotEmpty()) {
-                    response.results[0].toTrack()
-                } else {
-                    Log.w("network", "getTrackById: empty results for id=$id")
-                    null
-                }
+                response.results.firstOrNull()?.toTrack()
             }
-            is BaseResponse -> {
-                Log.e("network", "getTrackById error: ${response.errorMessage}")
-                null
-            }
+            is BaseResponse -> null
         }
     }
 
@@ -90,23 +68,18 @@ class TracksRepositoryImpl(
     override suspend fun updateTrackFavoriteStatus(track: Track, isFavorite: Boolean) {
         database.withTransaction {
             val trackEntity = track.toEntity(favorite = isFavorite)
-
             val exists = dao.exists(trackEntity.id)
 
             if (exists) {
                 dao.updateTrack(trackEntity)
-                Log.i("db", "favorite updated to $isFavorite for trackId=${track.id}")
             } else {
                 dao.insertTrack(trackEntity)
-                Log.i("db", "favorite inserted to $isFavorite for trackId=${track.id}")
             }
 
             if (!isFavorite) {
                 val playlistsCount = dao.getPlaylistsCountForTrack(track.id)
-                Log.i("db", "  $playlistsCount")
                 if (playlistsCount == 0) {
                     dao.deleteTrack(track.toEntity(favorite = false))
-                    Log.i("db", "trackId=${track.id} deleted as non-favorite and not in playlists")
                 }
             }
         }

@@ -27,6 +27,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -62,15 +64,26 @@ fun NewPlaylistScreen(
     val description by viewModel.description.collectAsState()
     val coverImagePath by viewModel.coverImageUri.collectAsState()
     val playlistCreated by viewModel.playlistCreated.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val duplicateErrorMessage = stringResource(R.string.new_playlist_duplicate_error)
 
     LaunchedEffect(playlistCreated) {
-        if (playlistCreated == true) {
-            onBack()
-            viewModel.resetCreationState()
+        when (playlistCreated) {
+            true -> {
+                onBack()
+                viewModel.resetCreationState()
+            }
+            false -> {
+                snackbarHostState.showSnackbar(duplicateErrorMessage)
+                viewModel.resetCreationState()
+            }
+            null -> {}
         }
     }
 
-    Scaffold { innerPadding ->
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
