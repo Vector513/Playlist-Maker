@@ -7,11 +7,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -98,6 +101,8 @@ fun SearchServerErrorState(onRetry: () -> Unit) {
 @Composable
 fun SearchResultsState(
     tracks: List<Track>,
+    canLoadMore: Boolean,
+    onLoadMore: () -> Unit,
     onClick: (Track) -> Unit
 ) {
     if (tracks.isEmpty()) {
@@ -105,7 +110,22 @@ fun SearchResultsState(
     } else {
         Spacer(Modifier.height(16.dp))
 
+        val listState = rememberLazyListState()
+
+        LaunchedEffect(tracks.size, canLoadMore) {
+            snapshotFlow {
+                val lastVisible = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+                val totalItems = listState.layoutInfo.totalItemsCount
+                lastVisible >= totalItems - 3
+            }.collect { nearEnd ->
+                if (nearEnd && canLoadMore) {
+                    onLoadMore()
+                }
+            }
+        }
+
         LazyColumn(
+            state = listState,
             modifier = Modifier.fillMaxSize()
         ) {
             items(tracks.size) { index ->

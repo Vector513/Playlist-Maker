@@ -4,6 +4,7 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlist_maker_android.domain.ServerErrorException
+import com.example.playlist_maker_android.domain.Track
 import com.example.playlist_maker_android.domain.TracksRepository
 import com.example.playlist_maker_android.domain.SearchHistoryRepository
 import kotlinx.coroutines.Dispatchers
@@ -22,10 +23,14 @@ class SearchViewModel(
     private val searchHistoryRepository: SearchHistoryRepository
 ) : ViewModel() {
     private val _searchScreenState = MutableStateFlow<SearchState>(SearchState.Initial)
-    val searchScreenState  = _searchScreenState.asStateFlow()
+    val searchScreenState = _searchScreenState.asStateFlow()
 
-    private val _textFieldState = MutableStateFlow<TextFieldState>(TextFieldState(""))
+    private val _textFieldState = MutableStateFlow(TextFieldState(""))
     val textFieldState = _textFieldState.asStateFlow()
+
+    private var currentQuery = ""
+    private var cachedTracks = emptyList<Track>()
+    private var visibleCount = 0
 
     init {
         viewModelScope.launch {
@@ -41,12 +46,25 @@ class SearchViewModel(
     }
 
     fun search(request: String) {
+        currentQuery = request
+        cachedTracks = emptyList()
+        visibleCount = 0
+
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 _searchScreenState.update { SearchState.Searching }
                 searchHistoryRepository.addToHistory(request)
-                val list = tracksRepository.searchTracks(expression = request)
-                _searchScreenState.update { SearchState.Success(foundList = list) }
+                cachedTracks = tracksRepository.searchTracks(
+                    expression = request,
+                    limit = API_FETCH_LIMIT
+                )
+                visibleCount = minOf(PAGE_SIZE, cachedTracks.size)
+                _searchScreenState.update {
+                    SearchState.Success(
+                        foundList = cachedTracks.take(visibleCount),
+                        canLoadMore = visibleCount < cachedTracks.size
+                    )
+                }
             } catch (e: ServerErrorException) {
                 _searchScreenState.update { SearchState.ServerError }
             } catch (e: IOException) {
@@ -56,7 +74,18 @@ class SearchViewModel(
             }
         }
     }
-    
+
+    fun loadNextPage() {
+        val current = _searchScreenState.value
+        if (current !is SearchState.Success || !current.canLoadMore) return
+
+        visibleCount = minOf(visibleCount + PAGE_SIZE, cachedTracks.size)
+        _searchScreenState.value = SearchState.Success(
+            foundList = cachedTracks.take(visibleCount),
+            canLoadMore = visibleCount < cachedTracks.size
+        )
+    }
+
     fun retrySearch() {
         val currentText = _textFieldState.value.text.toString()
         if (currentText.isNotEmpty()) {
@@ -67,8 +96,15 @@ class SearchViewModel(
     fun clearTextField() {
         _textFieldState.update { TextFieldState("") }
         _searchScreenState.update { SearchState.Initial }
+        currentQuery = ""
+        cachedTracks = emptyList()
+        visibleCount = 0
     }
 
     suspend fun getHistoryList() = searchHistoryRepository.getHistoryRequests()
 
+    companion object {
+        private const val API_FETCH_LIMIT = 200
+        private const val PAGE_SIZE = 10
+    }
 }

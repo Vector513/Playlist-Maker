@@ -76,7 +76,8 @@ internal fun SearchScreen(
                 screenState = screenState,
                 text = textState.text,
                 onTrackClick = onTrackClick,
-                onRetry = { viewModel.retrySearch() }
+                onRetry = { viewModel.retrySearch() },
+                onLoadMore = { viewModel.loadNextPage() }
             )
         }
     }

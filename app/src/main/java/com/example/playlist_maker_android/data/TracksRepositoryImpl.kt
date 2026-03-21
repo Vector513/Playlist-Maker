@@ -22,8 +22,8 @@ class TracksRepositoryImpl(
 
     private val dao = database.TracksDao()
 
-    override suspend fun searchTracks(expression: String): List<Track> {
-        val response = networkClient.search(TracksSearchRequest(expression))
+    override suspend fun searchTracks(expression: String, limit: Int): List<Track> {
+        val response = networkClient.search(TracksSearchRequest(expression, limit = limit))
         return when (response) {
             is TracksSearchResponse -> {
                 response.results.mapNotNull { dto ->
