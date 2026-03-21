@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.setTextAndSelectAll
@@ -93,7 +94,8 @@ fun SearchBar(
                     color = MaterialTheme.colorScheme.onTertiary
                 ),
                 cursorBrush = SolidColor(MaterialTheme.colorScheme.background),
-                keyboardOptions = KeyboardOptions.Default,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                onKeyboardAction = { onSearchClick() },
                 decorator = { innerTextField ->
 
                     Row(
