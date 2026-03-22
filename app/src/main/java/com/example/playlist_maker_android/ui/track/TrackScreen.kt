@@ -63,13 +63,6 @@ fun TrackScreen(
     val playlists by viewModel.playlists.collectAsState(emptyList())
     val playerState by playerViewModel.playerState.collectAsState()
 
-    LaunchedEffect(trackState) {
-        trackState?.let { track ->
-            if (playerState.currentTrack?.id != track.id && track.previewUrl != null) {
-                playerViewModel.playTrack(track)
-            }
-        }
-    }
 
     var showBottomSheet by remember { mutableStateOf(false) }
 

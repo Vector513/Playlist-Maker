@@ -66,7 +66,8 @@ class MainActivity : ComponentActivity() {
                                         launchSingleTop = true
                                     }
                                 }
-                            }
+                            },
+                            onSeek = { playerViewModel.seekTo(it) }
                         )
                     }
                 }

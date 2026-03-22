@@ -3,8 +3,11 @@ package com.example.playlist_maker_android.ui.player
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,13 +19,20 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -38,6 +48,7 @@ fun MiniPlayer(
     playerState: PlayerState,
     onPlayPauseClick: () -> Unit,
     onMiniPlayerClick: () -> Unit,
+    onSeek: (Int) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     AnimatedVisibility(
@@ -51,18 +62,78 @@ fun MiniPlayer(
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.surface)
             ) {
-                val progress = if (playerState.durationMs > 0) {
+                var isDragging by remember { mutableStateOf(false) }
+                var dragProgress by remember { mutableFloatStateOf(0f) }
+
+                val displayProgress = if (isDragging) {
+                    dragProgress
+                } else if (playerState.durationMs > 0) {
                     playerState.currentPositionMs.toFloat() / playerState.durationMs
                 } else 0f
 
-                LinearProgressIndicator(
-                    progress = { progress },
+                val currentProgress by rememberUpdatedState(displayProgress)
+
+                val activeColor = MaterialTheme.colorScheme.onPrimary
+                val inactiveColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.3f)
+                val dotColor = MaterialTheme.colorScheme.onPrimary
+
+                Canvas(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(Dimensions.MiniPlayerProgressHeight),
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    trackColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.3f)
-                )
+                        .height(SEEK_TOUCH_HEIGHT)
+                        .pointerInput(playerState.durationMs) {
+                            if (playerState.durationMs <= 0) return@pointerInput
+                            detectTapGestures { offset ->
+                                val tapProgress = (offset.x / size.width).coerceIn(0f, 1f)
+                                onSeek((tapProgress * playerState.durationMs).toInt())
+                            }
+                        }
+                        .pointerInput(playerState.durationMs) {
+                            if (playerState.durationMs <= 0) return@pointerInput
+                            detectHorizontalDragGestures(
+                                onDragStart = {
+                                    dragProgress = currentProgress
+                                    isDragging = true
+                                },
+                                onDragEnd = {
+                                    onSeek((dragProgress * playerState.durationMs).toInt())
+                                    isDragging = false
+                                },
+                                onDragCancel = {
+                                    isDragging = false
+                                },
+                                onHorizontalDrag = { _, dragAmount ->
+                                    val delta = dragAmount / size.width
+                                    dragProgress = (dragProgress + delta).coerceIn(0f, 1f)
+                                }
+                            )
+                        }
+                ) {
+                    val trackHeight = TRACK_HEIGHT.toPx()
+                    val y = size.height / 2
+                    val dotRadius = DOT_RADIUS.toPx()
+                    val progressX = size.width * displayProgress
+
+                    drawLine(
+                        color = activeColor,
+                        start = Offset(0f, y),
+                        end = Offset(progressX, y),
+                        strokeWidth = trackHeight
+                    )
+                    drawLine(
+                        color = inactiveColor,
+                        start = Offset(progressX, y),
+                        end = Offset(size.width, y),
+                        strokeWidth = trackHeight
+                    )
+                    if (displayProgress > 0f) {
+                        drawCircle(
+                            color = dotColor,
+                            radius = dotRadius,
+                            center = Offset(progressX, y)
+                        )
+                    }
+                }
 
                 Row(
                     modifier = Modifier
@@ -120,3 +191,7 @@ fun MiniPlayer(
         }
     }
 }
+
+private val TRACK_HEIGHT = 3.dp
+private val DOT_RADIUS = 5.dp
+private val SEEK_TOUCH_HEIGHT = 10.dp
