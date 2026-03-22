@@ -49,6 +49,8 @@
     <string name="pause_description">Пауза</string>
     <string name="preview_not_available">Превью недоступно</string>
     <string name="stop_description">Стоп</string>
+    <string name="next_description">Следующий</string>
+    <string name="previous_description">Предыдущий</string>
     <string name="track_image_description">Обложка трека %s</string>
     <string name="duration_format">%d %s</string>
     <string name="tracks_count_format">%d %s</string>

@@ -23,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -30,7 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -40,6 +41,7 @@ import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import com.example.playlist_maker_android.R
+import com.example.playlist_maker_android.domain.QueueSource
 import com.example.playlist_maker_android.ui.search.components.ArrowBackButton
 import com.example.playlist_maker_android.ui.search.components.TrackListItem
 import com.example.playlist_maker_android.ui.theme.Dimensions
@@ -56,6 +58,17 @@ fun PlaylistScreen(
     onBack: () -> Unit
 ) {
     val playlist by viewModel.playlist.collectAsState(null)
+    val playerState by playerViewModel.playerState.collectAsState()
+    val playlistTracks = playlist?.tracks.orEmpty()
+
+    LaunchedEffect(playlistTracks) {
+        if (playerState.currentTrack != null &&
+            playerState.queueSource is QueueSource.Playlist &&
+            (playerState.queueSource as QueueSource.Playlist).playlistId == playlistId
+        ) {
+            playerViewModel.updateQueue(playlistTracks)
+        }
+    }
 
     Scaffold { innerPadding ->
         Column(
@@ -92,15 +105,14 @@ fun PlaylistScreen(
                 }
             }
             else {
-                val context = LocalContext.current
                 val tracks = playlist?.tracks.orEmpty()
                 val totalSeconds = tracks.sumOf { track ->
                     parseTrackTimeSeconds(track.trackTime)
                 }
                 val totalMinutes = totalSeconds / 60
-                val minutesWord = context.resources.getQuantityString(R.plurals.minutes_plural, totalMinutes)
+                val minutesWord = pluralStringResource(R.plurals.minutes_plural, totalMinutes)
                 val durationText = "$totalMinutes $minutesWord"
-                val tracksWord = context.resources.getQuantityString(R.plurals.tracks_plural, tracks.size)
+                val tracksWord = pluralStringResource(R.plurals.tracks_plural, tracks.size)
                 val tracksCountText = "${tracks.size} $tracksWord"
 
                 Box(
@@ -220,7 +232,7 @@ fun PlaylistScreen(
                                     if (state.currentTrack?.id == track.id) {
                                         playerViewModel.togglePlayPause()
                                     } else {
-                                        playerViewModel.playTrack(track)
+                                        playerViewModel.playFromQueue(tracks, track, QueueSource.Playlist(playlistId))
                                     }
                                 },
                                 onNavigateClick = { onClick(track.id) }

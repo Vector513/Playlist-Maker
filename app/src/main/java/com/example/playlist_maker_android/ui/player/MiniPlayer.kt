@@ -45,11 +45,13 @@ import com.example.playlist_maker_android.ui.theme.Dimensions
 
 @Composable
 fun MiniPlayer(
+    modifier: Modifier = Modifier,
     playerState: PlayerState,
     onPlayPauseClick: () -> Unit,
+    onNextClick: () -> Unit = {},
+    onPreviousClick: () -> Unit = {},
     onMiniPlayerClick: () -> Unit,
     onSeek: (Int) -> Unit = {},
-    modifier: Modifier = Modifier
 ) {
     AnimatedVisibility(
         visible = playerState.currentTrack != null,
@@ -173,6 +175,16 @@ fun MiniPlayer(
                         )
                     }
 
+                    if (playerState.hasPrevious) {
+                        IconButton(onClick = onPreviousClick) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_skip_previous),
+                                contentDescription = stringResource(R.string.previous_description),
+                                tint = MaterialTheme.colorScheme.onPrimary
+                            )
+                        }
+                    }
+
                     IconButton(onClick = onPlayPauseClick) {
                         Icon(
                             painter = painterResource(
@@ -185,6 +197,16 @@ fun MiniPlayer(
                             ),
                             tint = MaterialTheme.colorScheme.onPrimary
                         )
+                    }
+
+                    if (playerState.hasNext) {
+                        IconButton(onClick = onNextClick) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_skip_next),
+                                contentDescription = stringResource(R.string.next_description),
+                                tint = MaterialTheme.colorScheme.onPrimary
+                            )
+                        }
                     }
                 }
             }

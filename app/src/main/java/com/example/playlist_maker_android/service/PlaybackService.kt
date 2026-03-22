@@ -66,6 +66,8 @@ class PlaybackService : Service() {
                     if (state.isPlaying) playerRepository.pause() else playerRepository.resume()
                 }
             }
+            ACTION_NEXT -> playerRepository.next()
+            ACTION_PREVIOUS -> playerRepository.previous()
             ACTION_STOP -> {
                 playerRepository.stop()
                 stopForeground(STOP_FOREGROUND_REMOVE)
@@ -88,6 +90,14 @@ class PlaybackService : Service() {
             playerRepository.stop()
         }
 
+        override fun onSkipToNext() {
+            playerRepository.next()
+        }
+
+        override fun onSkipToPrevious() {
+            playerRepository.previous()
+        }
+
         override fun onSeekTo(pos: Long) {
             playerRepository.seekTo(pos.toInt())
         }
@@ -108,14 +118,17 @@ class PlaybackService : Service() {
             .build()
         mediaSession.setMetadata(metadata)
 
-        val playbackState = PlaybackStateCompat.Builder()
-            .setActions(
-                PlaybackStateCompat.ACTION_PLAY or
+        var actions = PlaybackStateCompat.ACTION_PLAY or
                 PlaybackStateCompat.ACTION_PAUSE or
                 PlaybackStateCompat.ACTION_PLAY_PAUSE or
                 PlaybackStateCompat.ACTION_STOP or
                 PlaybackStateCompat.ACTION_SEEK_TO
-            )
+
+        if (state.hasNext) actions = actions or PlaybackStateCompat.ACTION_SKIP_TO_NEXT
+        if (state.hasPrevious) actions = actions or PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
+
+        val playbackState = PlaybackStateCompat.Builder()
+            .setActions(actions)
             .setState(
                 if (state.isPlaying) PlaybackStateCompat.STATE_PLAYING
                 else PlaybackStateCompat.STATE_PAUSED,
@@ -162,14 +175,26 @@ class PlaybackService : Service() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val playPauseIntent = PendingIntent.getService(
+        val previousIntent = PendingIntent.getService(
             this, 1,
+            Intent(this, PlaybackService::class.java).apply { action = ACTION_PREVIOUS },
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val playPauseIntent = PendingIntent.getService(
+            this, 2,
             Intent(this, PlaybackService::class.java).apply { action = ACTION_PLAY_PAUSE },
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
+        val nextIntent = PendingIntent.getService(
+            this, 3,
+            Intent(this, PlaybackService::class.java).apply { action = ACTION_NEXT },
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
         val stopIntent = PendingIntent.getService(
-            this, 2,
+            this, 4,
             Intent(this, PlaybackService::class.java).apply { action = ACTION_STOP },
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -178,27 +203,42 @@ class PlaybackService : Service() {
         val playPauseTitle = if (state.isPlaying) getString(R.string.pause_description)
             else getString(R.string.play_description)
 
-        val notification = NotificationCompat.Builder(this, App.PLAYBACK_CHANNEL_ID)
+        val builder = NotificationCompat.Builder(this, App.PLAYBACK_CHANNEL_ID)
             .setContentTitle(track.trackName)
             .setContentText(track.artistName)
             .setSmallIcon(R.drawable.ic_play)
             .setLargeIcon(cachedAlbumArt)
             .setContentIntent(contentIntent)
-            .addAction(playPauseIcon, playPauseTitle, playPauseIntent)
-            .addAction(R.drawable.ic_stop, getString(R.string.stop_description), stopIntent)
-            .setStyle(
-                MediaStyle()
-                    .setMediaSession(mediaSession.sessionToken)
-                    .setShowActionsInCompactView(0)
-            )
+
+        // Action 0: Previous
+        builder.addAction(
+            R.drawable.ic_skip_previous,
+            getString(R.string.previous_description),
+            previousIntent
+        )
+        // Action 1: Play/Pause
+        builder.addAction(playPauseIcon, playPauseTitle, playPauseIntent)
+        // Action 2: Next
+        builder.addAction(
+            R.drawable.ic_skip_next,
+            getString(R.string.next_description),
+            nextIntent
+        )
+        // Action 3: Stop
+        builder.addAction(R.drawable.ic_stop, getString(R.string.stop_description), stopIntent)
+
+        builder.setStyle(
+            MediaStyle()
+                .setMediaSession(mediaSession.sessionToken)
+                .setShowActionsInCompactView(0, 1, 2)
+        )
             .setOngoing(state.isPlaying)
             .setSilent(true)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-            .build()
 
         startForeground(
             NOTIFICATION_ID,
-            notification,
+            builder.build(),
             ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
         )
     }
@@ -211,6 +251,8 @@ class PlaybackService : Service() {
 
     companion object {
         const val ACTION_PLAY_PAUSE = "action_play_pause"
+        const val ACTION_NEXT = "action_next"
+        const val ACTION_PREVIOUS = "action_previous"
         const val ACTION_STOP = "action_stop"
         const val NOTIFICATION_ID = 1
     }

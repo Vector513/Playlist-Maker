@@ -29,12 +29,13 @@ import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,6 +45,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.playlist_maker_android.domain.QueueSource
 import com.example.playlist_maker_android.ui.search.components.ArrowBackButton
 import com.example.playlist_maker_android.ui.theme.Dimensions
 import com.example.playlist_maker_android.R
@@ -64,6 +66,7 @@ fun TrackScreen(
     val playerState by playerViewModel.playerState.collectAsState()
 
 
+    val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
 
     Scaffold { innerPadding ->
@@ -218,7 +221,16 @@ fun TrackScreen(
                         }
 
                         IconButton(
-                            onClick = { viewModel.toggleFavorite(!track.favorite) },
+                            onClick = {
+                                scope.launch {
+                                    val addingToFavorites = !track.favorite
+                                    viewModel.toggleFavorite(addingToFavorites)
+                                    if (playerState.queueSource is QueueSource.Favourites) {
+                                        val updatedFavorites = viewModel.getFavoriteTracks()
+                                        playerViewModel.updateQueue(updatedFavorites)
+                                    }
+                                }
+                            },
                             modifier = Modifier.size(Dimensions.PlayerControlSize),
                             colors = IconButtonDefaults.iconButtonColors(
                                 containerColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.25f)
@@ -260,7 +272,16 @@ fun TrackScreen(
                         }
 
                         IconButton(
-                            onClick = { viewModel.toggleFavorite(!track.favorite) },
+                            onClick = {
+                                scope.launch {
+                                    val addingToFavorites = !track.favorite
+                                    viewModel.toggleFavorite(addingToFavorites)
+                                    if (playerState.queueSource is QueueSource.Favourites) {
+                                        val updatedFavorites = viewModel.getFavoriteTracks()
+                                        playerViewModel.updateQueue(updatedFavorites)
+                                    }
+                                }
+                            },
                             modifier = Modifier.size(Dimensions.PlayerControlSize),
                             colors = IconButtonDefaults.iconButtonColors(
                                 containerColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.25f)
@@ -338,8 +359,15 @@ fun TrackScreen(
                             LazyColumn {
                                 items(playlists) { playlist ->
                                     PlaylistListItem(playlist) {
-                                        viewModel.insertTrackToPlaylist(playlist.id)
-                                        showBottomSheet = false
+                                        scope.launch {
+                                            viewModel.insertTrackToPlaylist(playlist.id)
+                                            val source = playerState.queueSource
+                                            if (source is QueueSource.Playlist && source.playlistId == playlist.id) {
+                                                val updatedTracks = viewModel.getPlaylistTracks(playlist.id)
+                                                playerViewModel.updateQueue(updatedTracks)
+                                            }
+                                            showBottomSheet = false
+                                        }
                                     }
                                 }
                             }

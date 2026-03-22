@@ -20,9 +20,7 @@ object Dimensions {
     val ButtonContentWidth = 183.5.dp
     val BoxSize = 48.dp
     val ArrowBackIconSize = 16.dp
-    val SearchBarHeight = 52.dp
     val SearchBarRadius = 8.dp
-    val SearchBarWrapperSize = 36.dp
     val SearchBarIconSize = 14.dp
     val ClearIconSize = 12.dp
     val ShareIconWidth = 16.dp
@@ -39,7 +37,6 @@ object Dimensions {
     val PlaylistsItemHeight = 61.dp
     val MiniPlayerHeight = 64.dp
     val MiniPlayerImageSize = 45.dp
-    val MiniPlayerProgressHeight = 2.dp
     val PlayerControlSize = 51.dp
 }
 

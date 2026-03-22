@@ -17,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -32,6 +33,7 @@ import com.example.playlist_maker_android.ui.theme.Dimensions
 import com.example.playlist_maker_android.ui.viewmodel.FavouritesViewModel
 import com.example.playlist_maker_android.ui.viewmodel.PlayerViewModel
 import com.example.playlist_maker_android.ui.search.components.TrackListItem
+import com.example.playlist_maker_android.domain.QueueSource
 import com.example.playlist_maker_android.domain.Track
 
 @Composable
@@ -42,6 +44,13 @@ fun FavouritesScreen(
     onTrackClick: (Track) -> Unit
 ) {
     val favoriteTracks by viewModel.favoriteList.collectAsState(emptyList())
+    val playerState by playerViewModel.playerState.collectAsState()
+
+    LaunchedEffect(favoriteTracks) {
+        if (playerState.currentTrack != null && playerState.queueSource is QueueSource.Favourites) {
+            playerViewModel.updateQueue(favoriteTracks)
+        }
+    }
 
     Scaffold { innerPadding ->
         Column(
@@ -115,7 +124,7 @@ fun FavouritesScreen(
                                 if (state.currentTrack?.id == track.id) {
                                     playerViewModel.togglePlayPause()
                                 } else {
-                                    playerViewModel.playTrack(track)
+                                    playerViewModel.playFromQueue(favoriteTracks, track, QueueSource.Favourites)
                                 }
                             },
                             onLongClick = { viewModel.toggleFavourite(false, track) },

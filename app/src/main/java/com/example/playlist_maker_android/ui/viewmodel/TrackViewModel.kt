@@ -6,10 +6,10 @@ import com.example.playlist_maker_android.domain.Playlist
 import com.example.playlist_maker_android.domain.PlaylistsRepository
 import com.example.playlist_maker_android.domain.Track
 import com.example.playlist_maker_android.domain.TracksRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class TrackViewModel(
@@ -33,19 +33,23 @@ class TrackViewModel(
         }
     }
 
-    fun toggleFavorite(isFavorite: Boolean) {
+    suspend fun toggleFavorite(isFavorite: Boolean) {
         val track = _currentTrack.value ?: return
-        viewModelScope.launch(Dispatchers.IO) {
-            tracksRepository.updateTrackFavoriteStatus(track, isFavorite)
-            _currentTrack.value = track.copy(favorite = isFavorite)
-        }
+        tracksRepository.updateTrackFavoriteStatus(track, isFavorite)
+        _currentTrack.value = track.copy(favorite = isFavorite)
     }
 
-    fun insertTrackToPlaylist(playlistId: Long) {
+    suspend fun getFavoriteTracks(): List<Track> {
+        return tracksRepository.getFavoriteTracks().first()
+    }
+
+    suspend fun getPlaylistTracks(playlistId: Long): List<Track> {
+        return playlistsRepository.getPlaylist(playlistId).first()?.tracks ?: emptyList()
+    }
+
+    suspend fun insertTrackToPlaylist(playlistId: Long) {
         val track = _currentTrack.value ?: return
-        viewModelScope.launch(Dispatchers.IO) {
-            playlistsRepository.addTrackToPlaylist(track, playlistId)
-        }
+        playlistsRepository.addTrackToPlaylist(track, playlistId)
     }
 
 }

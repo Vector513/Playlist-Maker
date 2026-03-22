@@ -66,9 +66,14 @@ class MainActivity : ComponentActivity() {
                         MiniPlayer(
                             playerState = playerState,
                             onPlayPauseClick = { playerViewModel.togglePlayPause() },
+                            onNextClick = { playerViewModel.next() },
+                            onPreviousClick = { playerViewModel.previous() },
                             onMiniPlayerClick = {
                                 playerState.currentTrack?.let { track ->
                                     navController.navigate("${Screen.TRACK.route}/${track.id}") {
+                                        popUpTo("${Screen.TRACK.route}/{trackId}") {
+                                            inclusive = true
+                                        }
                                         launchSingleTop = true
                                     }
                                 }
