@@ -19,7 +19,8 @@ fun TrackDto.toTrack(favorite: Boolean = false): Track =
         artistName = this.artistName,
         trackTime = formatTrackTime(this.trackTimeMillis),
         image = this.image ?: "",
-        favorite = favorite
+        favorite = favorite,
+        previewUrl = this.previewUrl
     )
 
 private fun formatTrackTime(millis: Long): String {

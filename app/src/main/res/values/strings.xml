@@ -45,6 +45,9 @@
     <string name="browser_open_error">Не удалось открыть браузер</string>
     <string name="search_icon_description">Поиск</string>
     <string name="clear_icon_description">Очистить</string>
+    <string name="play_description">Воспроизвести</string>
+    <string name="pause_description">Пауза</string>
+    <string name="preview_not_available">Превью недоступно</string>
     <string name="track_image_description">Обложка трека %s</string>
     <string name="duration_format">%d %s</string>
     <string name="tracks_count_format">%d %s</string>

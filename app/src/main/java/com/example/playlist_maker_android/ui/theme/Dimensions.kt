@@ -37,5 +37,9 @@ object Dimensions {
     val RecentRequestIconSize = 16.dp
     val PlaylistImageSmallSize = 45.dp
     val PlaylistsItemHeight = 61.dp
+    val MiniPlayerHeight = 64.dp
+    val MiniPlayerImageSize = 45.dp
+    val MiniPlayerProgressHeight = 2.dp
+    val PlayerControlSize = 51.dp
 }
 

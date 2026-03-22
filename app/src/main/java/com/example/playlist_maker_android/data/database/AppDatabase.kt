@@ -15,7 +15,7 @@ import com.example.playlist_maker_android.data.database.entity.PlaylistTrackCros
         TrackEntity::class,
         PlaylistEntity::class,
         PlaylistTrackCrossRefEntity::class
-    ], version = 3, exportSchema = true
+    ], version = 4, exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun TracksDao(): TracksDao
@@ -63,6 +63,15 @@ val MIGRATION_2_3 = object : Migration(2, 3) {
         db.execSQL("""
             ALTER TABLE playlists
             ADD COLUMN coverImageUri TEXT
+        """.trimIndent())
+    }
+}
+
+val MIGRATION_3_4 = object : Migration(3, 4) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("""
+            ALTER TABLE tracks
+            ADD COLUMN previewUrl TEXT DEFAULT NULL
         """.trimIndent())
     }
 }

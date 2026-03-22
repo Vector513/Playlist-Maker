@@ -7,6 +7,8 @@ data class Track(
     val trackTime: String,
     val image: String,
     val favorite: Boolean,
+
+    val previewUrl: String? = null,
 ) {
     val highResImage: String
         get() = image.replace("100x100", "512x512")

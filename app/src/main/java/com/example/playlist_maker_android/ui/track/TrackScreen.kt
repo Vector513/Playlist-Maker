@@ -23,9 +23,12 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,16 +47,28 @@ import com.example.playlist_maker_android.ui.search.components.ArrowBackButton
 import com.example.playlist_maker_android.ui.theme.Dimensions
 import com.example.playlist_maker_android.R
 import com.example.playlist_maker_android.ui.playlists.components.PlaylistListItem
+import com.example.playlist_maker_android.ui.viewmodel.PlayerViewModel
 import com.example.playlist_maker_android.ui.viewmodel.TrackViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TrackScreen(
     viewModel: TrackViewModel,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    playerViewModel: PlayerViewModel = koinViewModel()
 ) {
     val trackState by viewModel.currentTrack.collectAsState()
     val playlists by viewModel.playlists.collectAsState(emptyList())
+    val playerState by playerViewModel.playerState.collectAsState()
+
+    LaunchedEffect(trackState) {
+        trackState?.let { track ->
+            if (playerState.currentTrack?.id != track.id && track.previewUrl != null) {
+                playerViewModel.playTrack(track)
+            }
+        }
+    }
 
     var showBottomSheet by remember { mutableStateOf(false) }
 
@@ -113,7 +128,97 @@ fun TrackScreen(
                     )
                 )
 
-                Spacer(modifier = Modifier.height(54.dp))
+                Spacer(modifier = Modifier.height(24.dp))
+
+                if (track.previewUrl != null) {
+                    val isCurrentTrack = playerState.currentTrack?.id == track.id
+                    val progress = if (isCurrentTrack && playerState.durationMs > 0) {
+                        playerState.currentPositionMs.toFloat() / playerState.durationMs
+                    } else 0f
+                    val currentMs = if (isCurrentTrack) playerState.currentPositionMs else 0
+                    val durationMs = if (isCurrentTrack) playerState.durationMs else 0
+
+                    Slider(
+                        value = progress,
+                        onValueChange = { newValue ->
+                            if (isCurrentTrack) {
+                                playerViewModel.seekTo((newValue * playerState.durationMs).toInt())
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 24.dp),
+                        colors = SliderDefaults.colors(
+                            thumbColor = MaterialTheme.colorScheme.onPrimary,
+                            activeTrackColor = MaterialTheme.colorScheme.onPrimary,
+                            inactiveTrackColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.3f)
+                        )
+                    )
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 24.dp)
+                    ) {
+                        Text(
+                            text = formatMs(currentMs),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.tertiary
+                        )
+                        Spacer(Modifier.weight(1f))
+                        Text(
+                            text = formatMs(durationMs),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.tertiary
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        IconButton(
+                            onClick = {
+                                if (isCurrentTrack) {
+                                    playerViewModel.togglePlayPause()
+                                } else {
+                                    playerViewModel.playTrack(track)
+                                }
+                            },
+                            modifier = Modifier.size(Dimensions.PlayerControlSize),
+                            colors = IconButtonDefaults.iconButtonColors(
+                                containerColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.25f)
+                            )
+                        ) {
+                            Icon(
+                                painter = painterResource(
+                                    if (isCurrentTrack && playerState.isPlaying) R.drawable.ic_pause
+                                    else R.drawable.ic_play
+                                ),
+                                contentDescription = stringResource(
+                                    if (isCurrentTrack && playerState.isPlaying) R.string.pause_description
+                                    else R.string.play_description
+                                ),
+                                tint = MaterialTheme.colorScheme.onBackground
+                            )
+                        }
+                    }
+                } else {
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = stringResource(R.string.preview_not_available),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.tertiary
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
 
                 Row(
                     modifier = Modifier
@@ -248,4 +353,11 @@ fun TrackScreen(
             }
         }
     }
+}
+
+private fun formatMs(ms: Int): String {
+    val totalSeconds = ms / 1000
+    val minutes = totalSeconds / 60
+    val seconds = totalSeconds % 60
+    return "%d:%02d".format(minutes, seconds)
 }

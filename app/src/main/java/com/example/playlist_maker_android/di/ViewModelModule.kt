@@ -2,6 +2,7 @@ package com.example.playlist_maker_android.di
 
 import com.example.playlist_maker_android.ui.viewmodel.FavouritesViewModel
 import com.example.playlist_maker_android.ui.viewmodel.NewPlaylistViewModel
+import com.example.playlist_maker_android.ui.viewmodel.PlayerViewModel
 import com.example.playlist_maker_android.ui.viewmodel.PlaylistViewModel
 import com.example.playlist_maker_android.ui.viewmodel.PlaylistsViewModel
 import com.example.playlist_maker_android.ui.viewmodel.SearchViewModel
@@ -16,4 +17,5 @@ val viewModelModule = module {
     viewModel { NewPlaylistViewModel(get()) }
     viewModel { (playlistId: Long) -> PlaylistViewModel(get(), playlistId) }
     viewModel { (trackId: Long) -> TrackViewModel(get(), get(), trackId) }
+    viewModel { PlayerViewModel(get()) }
 }

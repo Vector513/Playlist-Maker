@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.example.playlist_maker_android.data.database.AppDatabase
 import com.example.playlist_maker_android.data.database.MIGRATION_1_2
 import com.example.playlist_maker_android.data.database.MIGRATION_2_3
+import com.example.playlist_maker_android.data.database.MIGRATION_3_4
 import org.koin.dsl.module
 
 val databaseModule = module {
@@ -14,7 +15,7 @@ val databaseModule = module {
             AppDatabase::class.java,
             "playlists_maker"
         )
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
             .build()
     }
 }

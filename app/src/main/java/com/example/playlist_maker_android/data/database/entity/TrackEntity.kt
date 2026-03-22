@@ -13,6 +13,7 @@ data class TrackEntity(
     val trackTime: String,
     val image: String,
     val favorite: Boolean = false,
+    val previewUrl: String? = null,
 )
 
 fun TrackEntity.toTrack(): Track {
@@ -22,7 +23,8 @@ fun TrackEntity.toTrack(): Track {
         artistName = this.artistName,
         trackTime = this.trackTime,
         favorite = this.favorite,
-        image = this.image
+        image = this.image,
+        previewUrl = this.previewUrl
     )
 }
 
@@ -35,6 +37,7 @@ fun Track.toEntity(
         artistName = this.artistName,
         trackTime = this.trackTime,
         image = this.image,
-        favorite = favorite
+        favorite = favorite,
+        previewUrl = this.previewUrl
     )
 }
