@@ -11,13 +11,15 @@ import com.example.playlist_maker_android.data.network.NetworkClient
 import com.example.playlist_maker_android.domain.ServerErrorException
 import com.example.playlist_maker_android.domain.Track
 import com.example.playlist_maker_android.domain.TracksRepository
+import com.example.playlist_maker_android.data.cache.PreviewCacheManager
 import com.example.playlist_maker_android.data.database.entity.toEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class TracksRepositoryImpl(
     private val networkClient: NetworkClient,
-    private val database: AppDatabase
+    private val database: AppDatabase,
+    private val cacheManager: PreviewCacheManager
 ) : TracksRepository {
 
     private val dao = database.TracksDao()
@@ -80,8 +82,13 @@ class TracksRepositoryImpl(
                 val playlistsCount = dao.getPlaylistsCountForTrack(track.id)
                 if (playlistsCount == 0) {
                     dao.deleteTrack(track.toEntity(favorite = false))
+                    cacheManager.deleteCache(track.id)
                 }
             }
+        }
+
+        if (isFavorite) {
+            track.previewUrl?.let { cacheManager.cachePreview(track.id, it) }
         }
     }
 }

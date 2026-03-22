@@ -1,6 +1,7 @@
 package com.example.playlist_maker_android.data
 
 import android.media.MediaPlayer
+import com.example.playlist_maker_android.data.cache.PreviewCacheManager
 import com.example.playlist_maker_android.domain.PlayerRepository
 import com.example.playlist_maker_android.domain.PlayerState
 import com.example.playlist_maker_android.domain.Track
@@ -16,7 +17,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
-class MediaPlayerRepository : PlayerRepository {
+class MediaPlayerRepository(
+    private val cacheManager: PreviewCacheManager
+) : PlayerRepository {
 
     private var mediaPlayer: MediaPlayer? = null
     private val _playerState = MutableStateFlow(PlayerState())
@@ -28,8 +31,10 @@ class MediaPlayerRepository : PlayerRepository {
     override fun play(track: Track) {
         val url = track.previewUrl ?: return
         stop()
+        val cachedFile = cacheManager.getCachedFile(track.id)
+        val source = cachedFile?.absolutePath ?: url
         mediaPlayer = MediaPlayer().apply {
-            setDataSource(url)
+            setDataSource(source)
             setOnPreparedListener { mp ->
                 _playerState.value = PlayerState(
                     currentTrack = track,

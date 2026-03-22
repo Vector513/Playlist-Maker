@@ -5,6 +5,7 @@ import androidx.room.withTransaction
 import com.example.playlist_maker_android.data.database.AppDatabase
 import com.example.playlist_maker_android.data.database.entity.PlaylistEntity
 import com.example.playlist_maker_android.data.database.entity.PlaylistTrackCrossRefEntity
+import com.example.playlist_maker_android.data.cache.PreviewCacheManager
 import com.example.playlist_maker_android.data.database.entity.toEntity
 import com.example.playlist_maker_android.data.database.toPlaylist
 import com.example.playlist_maker_android.domain.Playlist
@@ -14,7 +15,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class PlaylistsRepositoryImpl(
-    private val database: AppDatabase
+    private val database: AppDatabase,
+    private val cacheManager: PreviewCacheManager
 ) : PlaylistsRepository {
     private val playlistsDao = database.PlaylistsDao()
     private val tracksDao = database.TracksDao()
@@ -52,6 +54,8 @@ class PlaylistsRepositoryImpl(
                 PlaylistTrackCrossRefEntity(playlistId = playlistId, trackId = trackEntity.id)
             )
         }
+
+        track.previewUrl?.let { cacheManager.cachePreview(track.id, it) }
     }
 
     override suspend fun deletePlaylistById(id: Long) {
