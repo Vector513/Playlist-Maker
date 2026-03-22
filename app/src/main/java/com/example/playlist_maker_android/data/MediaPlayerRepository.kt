@@ -1,7 +1,10 @@
 package com.example.playlist_maker_android.data
 
+import android.content.Context
+import android.content.Intent
 import android.media.MediaPlayer
 import com.example.playlist_maker_android.data.cache.PreviewCacheManager
+import com.example.playlist_maker_android.service.PlaybackService
 import com.example.playlist_maker_android.domain.PlayerRepository
 import com.example.playlist_maker_android.domain.PlayerState
 import com.example.playlist_maker_android.domain.Track
@@ -18,6 +21,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 class MediaPlayerRepository(
+    private val context: Context,
     private val cacheManager: PreviewCacheManager
 ) : PlayerRepository {
 
@@ -44,6 +48,7 @@ class MediaPlayerRepository(
                 )
                 mp.start()
                 startProgressUpdates()
+                startService()
             }
             setOnCompletionListener {
                 progressJob?.cancel()
@@ -91,6 +96,10 @@ class MediaPlayerRepository(
                 delay(PROGRESS_UPDATE_INTERVAL_MS)
             }
         }
+    }
+
+    private fun startService() {
+        context.startForegroundService(Intent(context, PlaybackService::class.java))
     }
 
     companion object {

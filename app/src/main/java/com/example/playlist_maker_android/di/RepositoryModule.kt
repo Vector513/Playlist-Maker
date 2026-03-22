@@ -27,6 +27,6 @@ val repositoryModule = module {
     }
 
     single<PlayerRepository> {
-        MediaPlayerRepository(cacheManager = get())
+        MediaPlayerRepository(context = get(), cacheManager = get())
     }
 }
