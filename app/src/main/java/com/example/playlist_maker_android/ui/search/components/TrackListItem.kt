@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,7 +36,8 @@ import com.example.playlist_maker_android.ui.theme.Dimensions
 fun TrackListItem(
     track: Track,
     onClick: () -> Unit,
-    onLongClick: (() -> Unit)? = null
+    onLongClick: (() -> Unit)? = null,
+    onNavigateClick: (() -> Unit)? = null
 ) {
     Row(
         modifier = Modifier
@@ -59,7 +62,6 @@ fun TrackListItem(
             placeholder = painterResource(R.mipmap.ic_music),
             error = painterResource(R.mipmap.ic_music)
         )
-
 
         Spacer(modifier = Modifier.width(8.dp))
 
@@ -113,24 +115,36 @@ fun TrackListItem(
             }
         }
 
-        Spacer(Modifier.width(8.dp))
-
-        Box(
-            modifier = Modifier
-                .padding(end = Dimensions.ButtonContentEndPadding)
-                .size(Dimensions.IconSize)
-            ,
-            contentAlignment = Alignment.Center
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_arrow_forward),
-                contentDescription = "",
+        if (onNavigateClick != null) {
+            IconButton(
+                onClick = onNavigateClick,
+                modifier = Modifier.size(Dimensions.IconSize + Dimensions.ButtonContentEndPadding)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_arrow_forward),
+                    contentDescription = "",
+                    modifier = Modifier
+                        .width(Dimensions.ArrowIconWidth)
+                        .height(Dimensions.ArrowIconHeight),
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
+                )
+            }
+        } else {
+            Box(
                 modifier = Modifier
-                    .width(Dimensions.ArrowIconWidth)
-                    .height(Dimensions.ArrowIconHeight)
-                ,
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
-            )
+                    .padding(end = Dimensions.ButtonContentEndPadding)
+                    .size(Dimensions.IconSize),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_arrow_forward),
+                    contentDescription = "",
+                    modifier = Modifier
+                        .width(Dimensions.ArrowIconWidth)
+                        .height(Dimensions.ArrowIconHeight),
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
+                )
+            }
         }
     }
 }

@@ -43,6 +43,7 @@ import com.example.playlist_maker_android.R
 import com.example.playlist_maker_android.ui.search.components.ArrowBackButton
 import com.example.playlist_maker_android.ui.search.components.TrackListItem
 import com.example.playlist_maker_android.ui.theme.Dimensions
+import com.example.playlist_maker_android.ui.viewmodel.PlayerViewModel
 import com.example.playlist_maker_android.ui.viewmodel.PlaylistViewModel
 
 @Composable
@@ -50,6 +51,7 @@ fun PlaylistScreen(
     modifier: Modifier = Modifier,
     playlistId: Long,
     viewModel: PlaylistViewModel = koinViewModel { parametersOf(playlistId) },
+    playerViewModel: PlayerViewModel = koinViewModel(),
     onClick: (Long) -> Unit,
     onBack: () -> Unit
 ) {
@@ -213,7 +215,15 @@ fun PlaylistScreen(
                         items(tracks) { track ->
                             TrackListItem(
                                 track = track,
-                                onClick = { onClick(track.id) }
+                                onClick = {
+                                    val state = playerViewModel.playerState.value
+                                    if (state.currentTrack?.id == track.id) {
+                                        playerViewModel.togglePlayPause()
+                                    } else {
+                                        playerViewModel.playTrack(track)
+                                    }
+                                },
+                                onNavigateClick = { onClick(track.id) }
                             )
                         }
                     }

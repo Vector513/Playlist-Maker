@@ -18,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import com.example.playlist_maker_android.ui.search.components.SearchPanelHeader
+import com.example.playlist_maker_android.ui.viewmodel.PlayerViewModel
 import com.example.playlist_maker_android.ui.viewmodel.SearchViewModel
 import org.koin.androidx.compose.koinViewModel
 import com.example.playlist_maker_android.domain.Track
@@ -27,6 +28,7 @@ import com.example.playlist_maker_android.ui.viewmodel.SearchState
 @Composable
 internal fun SearchScreen(
     viewModel: SearchViewModel = koinViewModel(),
+    playerViewModel: PlayerViewModel = koinViewModel(),
     onTrackClick: (Track) -> Unit,
     onBack: () -> Unit
 ) {
@@ -75,9 +77,17 @@ internal fun SearchScreen(
             SearchContent(
                 screenState = screenState,
                 text = textState.text,
-                onTrackClick = onTrackClick,
+                onTrackClick = { track ->
+                    val playerState = playerViewModel.playerState.value
+                    if (playerState.currentTrack?.id == track.id) {
+                        playerViewModel.togglePlayPause()
+                    } else {
+                        playerViewModel.playTrack(track)
+                    }
+                },
                 onRetry = { viewModel.retrySearch() },
-                onLoadMore = { viewModel.loadNextPage() }
+                onLoadMore = { viewModel.loadNextPage() },
+                onNavigateClick = onTrackClick
             )
         }
     }

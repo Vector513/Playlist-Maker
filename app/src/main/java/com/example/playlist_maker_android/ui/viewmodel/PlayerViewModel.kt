@@ -30,8 +30,4 @@ class PlayerViewModel(
         playerRepository.seekTo(positionMs)
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        playerRepository.stop()
-    }
 }

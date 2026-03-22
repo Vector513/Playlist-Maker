@@ -103,7 +103,8 @@ fun SearchResultsState(
     tracks: List<Track>,
     canLoadMore: Boolean,
     onLoadMore: () -> Unit,
-    onClick: (Track) -> Unit
+    onClick: (Track) -> Unit,
+    onNavigateClick: (Track) -> Unit = {}
 ) {
     if (tracks.isEmpty()) {
         SearchNoResults()
@@ -129,9 +130,11 @@ fun SearchResultsState(
             modifier = Modifier.fillMaxSize()
         ) {
             items(tracks.size) { index ->
+                val track = tracks[index]
                 TrackListItem(
-                    track = tracks[index],
-                    onClick = { onClick(tracks[index]) }
+                    track = track,
+                    onClick = { onClick(track) },
+                    onNavigateClick = { onNavigateClick(track) }
                 )
             }
         }

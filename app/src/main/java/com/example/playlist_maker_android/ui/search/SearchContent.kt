@@ -15,7 +15,8 @@ fun SearchContent(
     text: CharSequence,
     onTrackClick: (Track) -> Unit,
     onRetry: () -> Unit,
-    onLoadMore: () -> Unit
+    onLoadMore: () -> Unit,
+    onNavigateClick: (Track) -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -30,7 +31,8 @@ fun SearchContent(
                 tracks = screenState.foundList,
                 canLoadMore = screenState.canLoadMore,
                 onLoadMore = onLoadMore,
-                onClick = onTrackClick
+                onClick = onTrackClick,
+                onNavigateClick = onNavigateClick
             )
             is SearchState.Fail -> SearchErrorState(screenState.error)
             is SearchState.ServerError -> SearchServerErrorState(onRetry)

@@ -30,12 +30,14 @@ import org.koin.androidx.compose.koinViewModel
 import com.example.playlist_maker_android.ui.search.components.ArrowBackButton
 import com.example.playlist_maker_android.ui.theme.Dimensions
 import com.example.playlist_maker_android.ui.viewmodel.FavouritesViewModel
+import com.example.playlist_maker_android.ui.viewmodel.PlayerViewModel
 import com.example.playlist_maker_android.ui.search.components.TrackListItem
 import com.example.playlist_maker_android.domain.Track
 
 @Composable
 fun FavouritesScreen(
     viewModel: FavouritesViewModel = koinViewModel(),
+    playerViewModel: PlayerViewModel = koinViewModel(),
     onBack: () -> Unit,
     onTrackClick: (Track) -> Unit
 ) {
@@ -108,8 +110,16 @@ fun FavouritesScreen(
                     items(favoriteTracks) { track ->
                         TrackListItem(
                             track = track,
-                            onClick = { onTrackClick(track) },
-                            onLongClick = { viewModel.toggleFavourite(false, track) }
+                            onClick = {
+                                val state = playerViewModel.playerState.value
+                                if (state.currentTrack?.id == track.id) {
+                                    playerViewModel.togglePlayPause()
+                                } else {
+                                    playerViewModel.playTrack(track)
+                                }
+                            },
+                            onLongClick = { viewModel.toggleFavourite(false, track) },
+                            onNavigateClick = { onTrackClick(track) }
                         )
                     }
                 }
