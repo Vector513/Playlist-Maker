@@ -1,6 +1,7 @@
 package com.example.playlist_maker_android.ui.track
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -173,12 +174,29 @@ fun TrackScreen(
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 24.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
+                        IconButton(
+                            onClick = { showBottomSheet = true },
+                            modifier = Modifier.size(Dimensions.PlayerControlSize),
+                            colors = IconButtonDefaults.iconButtonColors(
+                                containerColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.25f)
+                            )
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_add_to_playlist),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onBackground
+                            )
+                        }
+
                         IconButton(
                             onClick = {
                                 if (isCurrentTrack) {
@@ -187,7 +205,7 @@ fun TrackScreen(
                                     playerViewModel.playTrack(track)
                                 }
                             },
-                            modifier = Modifier.size(Dimensions.PlayerControlSize),
+                            modifier = Modifier.size(64.dp),
                             colors = IconButtonDefaults.iconButtonColors(
                                 containerColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.25f)
                             )
@@ -201,79 +219,71 @@ fun TrackScreen(
                                     if (isCurrentTrack && playerState.isPlaying) R.string.pause_description
                                     else R.string.play_description
                                 ),
+                                modifier = Modifier.size(32.dp),
                                 tint = MaterialTheme.colorScheme.onBackground
+                            )
+                        }
+
+                        IconButton(
+                            onClick = { viewModel.toggleFavorite(!track.favorite) },
+                            modifier = Modifier.size(Dimensions.PlayerControlSize),
+                            colors = IconButtonDefaults.iconButtonColors(
+                                containerColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.25f)
+                            )
+                        ) {
+                            Icon(
+                                painter = painterResource(
+                                    if (track.favorite) R.drawable.ic_add_to_favourites_filled
+                                    else R.drawable.ic_add_to_favourites_outline
+                                ),
+                                contentDescription = null,
+                                tint = if (track.favorite) Color.Red
+                                else MaterialTheme.colorScheme.onBackground
                             )
                         }
                     }
                 } else {
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 24.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(
-                            text = stringResource(R.string.preview_not_available),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.tertiary
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Spacer(modifier = Modifier.width(24.dp))
-
-                    IconButton(onClick = {
-                        showBottomSheet = true
-                    },
-                        modifier = Modifier.size(51.dp),
-                        colors = IconButtonDefaults.iconButtonColors(
-                            containerColor = MaterialTheme.colorScheme.onPrimary.copy(
-                                alpha = 0.25f
+                        IconButton(
+                            onClick = { showBottomSheet = true },
+                            modifier = Modifier.size(Dimensions.PlayerControlSize),
+                            colors = IconButtonDefaults.iconButtonColors(
+                                containerColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.25f)
                             )
-                        )
-                    ) {
-                        Icon(
-                            painter = painterResource(
-                                id = R.drawable.ic_add_to_playlist
-                            ),
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onBackground
-                        )
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_add_to_playlist),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onBackground
+                            )
+                        }
+
+                        IconButton(
+                            onClick = { viewModel.toggleFavorite(!track.favorite) },
+                            modifier = Modifier.size(Dimensions.PlayerControlSize),
+                            colors = IconButtonDefaults.iconButtonColors(
+                                containerColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.25f)
+                            )
+                        ) {
+                            Icon(
+                                painter = painterResource(
+                                    if (track.favorite) R.drawable.ic_add_to_favourites_filled
+                                    else R.drawable.ic_add_to_favourites_outline
+                                ),
+                                contentDescription = null,
+                                tint = if (track.favorite) Color.Red
+                                else MaterialTheme.colorScheme.onBackground
+                            )
+                        }
                     }
-
-                    Spacer(modifier = Modifier.weight(1f))
-
-                    IconButton(
-                        onClick = {
-                            viewModel.toggleFavorite(!track.favorite)
-                        },
-                        modifier = Modifier.size(51.dp),
-                        colors = IconButtonDefaults.iconButtonColors(
-                            containerColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.25f)
-                        )
-                    ) {
-                        Icon(
-                            painter = painterResource(
-                                id = if (track.favorite)
-                                    R.drawable.ic_add_to_favourites_filled
-                                else
-                                    R.drawable.ic_add_to_favourites_outline
-                            ),
-                            contentDescription = null,
-                            tint = if (track.favorite)
-                                Color.Red
-                            else
-                                MaterialTheme.colorScheme.onBackground
-                        )
-                    }
-
-
-                    Spacer(modifier = Modifier.width(24.dp))
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
