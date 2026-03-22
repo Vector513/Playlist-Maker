@@ -22,6 +22,7 @@ roomVersion = "2.7.2"
 kspVersion = "2.2.0-2.0.2"
 koinAndroid = "3.5.6"
 koinAndroidxCompose = "3.5.6"
+androidxMedia = "1.7.0"
 datastoreCore = "1.2.0"
 roomKtx = "2.8.4"
 
@@ -64,6 +65,8 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 androidx-room = { group= "androidx.room", name = "room-runtime", version.ref = "roomVersion"}
 androidx-room-ktx = { group= "androidx.room", name = "room-ktx", version.ref = "roomVersion"}
 androidx-room-ksp = { group= "androidx.room", name = "room-compiler", version.ref = "roomVersion"}
+
+androidx-media = { group = "androidx.media", name = "media", version.ref = "androidxMedia" }
 
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxCompose" }
