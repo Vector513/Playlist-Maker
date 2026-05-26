@@ -36,7 +36,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -50,6 +49,7 @@ import com.example.playlist_maker_android.ui.search.components.ArrowBackButton
 import com.example.playlist_maker_android.ui.search.components.TrackListItem
 import com.example.playlist_maker_android.ui.theme.Dimensions
 import com.example.playlist_maker_android.ui.viewmodel.PlaylistViewModel
+import androidx.compose.ui.platform.LocalResources
 
 @Composable
 fun PlaylistScreen(
@@ -97,15 +97,15 @@ fun PlaylistScreen(
                 }
             }
             else {
-                val context = LocalContext.current
+                val resources = LocalResources.current
                 val tracks = playlist?.tracks.orEmpty()
                 val totalSeconds = tracks.sumOf { track ->
                     parseTrackTimeSeconds(track.trackTime)
                 }
                 val totalMinutes = totalSeconds / 60
-                val minutesWord = context.resources.getQuantityString(R.plurals.minutes_plural, totalMinutes)
+                val minutesWord = resources.getQuantityString(R.plurals.minutes_plural, totalMinutes)
                 val durationText = "$totalMinutes $minutesWord"
-                val tracksWord = context.resources.getQuantityString(R.plurals.tracks_plural, tracks.size)
+                val tracksWord = resources.getQuantityString(R.plurals.tracks_plural, tracks.size)
                 val tracksCountText = "${tracks.size} $tracksWord"
 
                 Box(
