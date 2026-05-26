@@ -19,12 +19,18 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -54,6 +60,7 @@ fun PlaylistScreen(
     onBack: () -> Unit
 ) {
     val playlist by viewModel.playlist.collectAsState(null)
+    var trackPendingDeletion by remember { mutableStateOf<Long?>(null) }
 
     Scaffold { innerPadding ->
         Column(
@@ -213,12 +220,56 @@ fun PlaylistScreen(
                         items(tracks) { track ->
                             TrackListItem(
                                 track = track,
-                                onClick = { onClick(track.id) }
+                                onClick = { onClick(track.id) },
+                                onLongClick = { trackPendingDeletion = track.id }
                             )
                         }
                     }
             }
         }
+    }
+
+    trackPendingDeletion?.let { trackId ->
+        AlertDialog(
+            onDismissRequest = { trackPendingDeletion = null },
+            title = {
+                Text(
+                    text = stringResource(R.string.delete_track_dialog_title),
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.removeTrack(trackId)
+                        trackPendingDeletion = null
+                    },
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.onSurface
+                    )
+                ) {
+                    Text(
+                        text = stringResource(R.string.delete_track_dialog_confirm),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { trackPendingDeletion = null },
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.onSurface
+                    )
+                ) {
+                    Text(
+                        text = stringResource(R.string.delete_track_dialog_dismiss),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+        )
     }
 }
 
