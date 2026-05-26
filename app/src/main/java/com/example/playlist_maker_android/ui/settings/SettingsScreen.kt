@@ -6,7 +6,6 @@ import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,7 +23,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -139,40 +137,6 @@ private fun ListOfButtons() {
             .padding(top = 24.dp)
             .background(MaterialTheme.colorScheme.surface)
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(Dimensions.SettingsButtonHeight)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(R.string.dark_theme_text),
-                    modifier = Modifier.padding(start = 16.dp),
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                )
-
-                Box(
-                    modifier = Modifier.padding(end = Dimensions.ButtonContentEndPadding),
-                    contentAlignment = Alignment.Center
-                ) {
-                    // TODO: смена темы свитчом, хз как это правильно сделать
-                    Switch(
-                        checked = isSystemInDarkTheme(),
-                        onCheckedChange = null,
-                        enabled = false,
-
-                    )
-
-                }
-            }
-        }
-
         ShareAppButton()
         SupportButton()
         UserAgreementButton()
